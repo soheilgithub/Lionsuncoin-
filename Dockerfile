@@ -9,7 +9,9 @@ ENV BLUEBIRD_WARNINGS=0 \
 RUN apk add --no-cache \
   nodejs
 
-COPY package.json ./
+COPY package.json ./ 
+COPY app/index.html /app/
+COPY app/infinite-scroll.js /app/
 
 RUN  apk add --no-cache npm \
  && npm i --no-optional \
@@ -21,3 +23,4 @@ COPY . /app
 CMD ["node","/app/app.js"]
 
 EXPOSE 3000
+
