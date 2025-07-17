@@ -1,0 +1,623 @@
+/* Mobile First Responsive Design */
+
+/* Large Desktop (1400px and up) */
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1320px;
+  }
+  
+  .hero-title {
+    font-size: 4rem;
+  }
+  
+  .hero-content {
+    gap: var(--spacing-2xl);
+  }
+}
+
+/* Desktop (1200px and up) */
+@media (min-width: 1200px) {
+  .games-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .platforms-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Tablet (992px and up) */
+@media (min-width: 992px) {
+  .nav-toggle {
+    display: none;
+  }
+  
+  .nav-menu {
+    display: flex;
+  }
+  
+  .hero-content {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .hero-stats {
+    flex-direction: row;
+  }
+}
+
+/* Small Tablet (768px and up) */
+@media (min-width: 768px) {
+  .platforms-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .games-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .leaderboard-header,
+  .leaderboard-row {
+    grid-template-columns: auto 1fr auto auto auto;
+  }
+  
+  .wallet-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .results-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Mobile (up to 767px) */
+@media (max-width: 767px) {
+  /* Navigation */
+  .nav-container {
+    padding: var(--spacing-sm);
+  }
+  
+  .nav-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: var(--bg-card);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    flex-direction: column;
+    padding: var(--spacing-md);
+    gap: var(--spacing-md);
+  }
+  
+  .nav-menu.active {
+    display: flex;
+  }
+  
+  .nav-toggle {
+    display: flex;
+  }
+  
+  .nav-actions {
+    gap: var(--spacing-xs);
+  }
+  
+  .coin-balance {
+    padding: var(--spacing-xs);
+    font-size: 0.875rem;
+  }
+  
+  .nav-btn {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.875rem;
+  }
+  
+  /* Hero Section */
+  .hero {
+    padding-top: 80px;
+    min-height: auto;
+  }
+  
+  .hero-content {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xl);
+    text-align: center;
+  }
+  
+  .hero-title {
+    font-size: 2.5rem;
+    line-height: 1.2;
+  }
+  
+  .hero-description {
+    font-size: 1.125rem;
+  }
+  
+  .hero-stats {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  
+  .hero-actions {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+  
+  .btn-large {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: 1rem;
+  }
+  
+  .game-preview {
+    transform: none;
+    max-width: 100%;
+  }
+  
+  .game-screen {
+    padding: var(--spacing-sm);
+  }
+  
+  #heroGameCanvas {
+    width: 100%;
+    height: auto;
+    max-width: 300px;
+  }
+  
+  /* Sections */
+  .section-title {
+    font-size: 2rem;
+  }
+  
+  .section-description {
+    font-size: 1rem;
+  }
+  
+  /* Platform Cards */
+  .platforms-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+  
+  .platform-card {
+    padding: var(--spacing-md);
+  }
+  
+  .platform-icon {
+    font-size: 2.5rem;
+  }
+  
+  /* Games */
+  .games-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+  
+  .game-card {
+    margin: 0;
+  }
+  
+  .game-content {
+    padding: var(--spacing-md);
+  }
+  
+  .game-banner {
+    height: 150px;
+  }
+  
+  .game-icon {
+    font-size: 3rem;
+  }
+  
+  .game-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+  
+  .game-actions {
+    flex-direction: column;
+  }
+  
+  /* Leaderboard */
+  .leaderboard-header {
+    display: none; /* Hide header on mobile for better UX */
+  }
+  
+  .leaderboard-row {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-sm);
+    background: rgba(255, 255, 255, 0.02);
+  }
+  
+  .leaderboard-row:last-child {
+    margin-bottom: 0;
+  }
+  
+  .player-info {
+    order: 1;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .rank {
+    order: 2;
+    text-align: center;
+    font-size: 1.5rem;
+  }
+  
+  .level-badge,
+  .experience-points,
+  .coin-amount,
+  .games-played {
+    order: 3;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--spacing-xs) 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .level-badge::before { content: "Level: "; }
+  .experience-points::before { content: "XP: "; }
+  .coin-amount::before { content: "Coins: "; }
+  .games-played::before { content: "Games: "; }
+  
+  /* Wallet */
+  .wallet-card {
+    margin: 0 var(--spacing-sm);
+    padding: var(--spacing-md);
+  }
+  
+  .wallet-header {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    text-align: center;
+  }
+  
+  .balance-amount {
+    font-size: 1.75rem;
+    justify-content: center;
+  }
+  
+  .wallet-stats {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+  }
+  
+  .wallet-actions {
+    flex-direction: column;
+  }
+  
+  /* Modals */
+  .modal-content {
+    width: 95%;
+    margin: var(--spacing-sm);
+    padding: var(--spacing-md);
+  }
+  
+  .game-modal-content {
+    width: 98%;
+    max-height: 95vh;
+  }
+  
+  .modal-header {
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .modal-form {
+    gap: var(--spacing-sm);
+  }
+  
+  /* Game Canvas */
+  #gameCanvas {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .game-controls {
+    gap: var(--spacing-xs);
+  }
+  
+  .game-controls .btn {
+    flex: 1;
+    padding: var(--spacing-sm);
+    font-size: 0.875rem;
+  }
+  
+  /* Game Results */
+  .results-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-sm);
+  }
+  
+  .result-stat {
+    padding: var(--spacing-sm);
+  }
+  
+  .result-stat-value {
+    font-size: 1.25rem;
+  }
+  
+  .coins-earned {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 1.125rem;
+  }
+  
+  /* Achievements */
+  .achievements-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-sm);
+  }
+  
+  .achievement-card {
+    padding: var(--spacing-sm);
+  }
+  
+  .achievement-icon {
+    font-size: 1.5rem;
+  }
+  
+  .achievement-title {
+    font-size: 0.8rem;
+  }
+  
+  .achievement-description {
+    font-size: 0.7rem;
+  }
+  
+  /* Power-ups */
+  .powerups-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .powerup-item {
+    padding: var(--spacing-xs);
+  }
+  
+  .powerup-icon {
+    font-size: 1.25rem;
+  }
+  
+  /* Lobby */
+  .lobby-container {
+    padding: var(--spacing-md);
+    margin: 0 var(--spacing-sm);
+  }
+  
+  .lobby-code {
+    padding: var(--spacing-sm);
+    font-size: 1.125rem;
+  }
+  
+  .players-list {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+  }
+  
+  .player-slot {
+    padding: var(--spacing-sm);
+  }
+  
+  /* Toast Notifications */
+  .toast-container {
+    right: var(--spacing-sm);
+    left: var(--spacing-sm);
+  }
+  
+  .toast {
+    min-width: auto;
+    padding: var(--spacing-sm);
+  }
+  
+  /* Utility Classes for Mobile */
+  .mobile-hidden {
+    display: none;
+  }
+  
+  .mobile-only {
+    display: block;
+  }
+  
+  .mobile-text-center {
+    text-align: center;
+  }
+  
+  .mobile-full-width {
+    width: 100%;
+  }
+}
+
+/* Small Mobile (up to 480px) */
+@media (max-width: 480px) {
+  :root {
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.75rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 2.5rem;
+  }
+  
+  .container {
+    padding: 0 var(--spacing-sm);
+  }
+  
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .section-title {
+    font-size: 1.75rem;
+  }
+  
+  .nav-brand {
+    font-size: 1.25rem;
+  }
+  
+  .nav-icon {
+    font-size: 1.5rem;
+  }
+  
+  .coin-balance {
+    display: none; /* Hide on very small screens */
+  }
+  
+  .achievements-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .results-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .hero-actions {
+    gap: var(--spacing-xs);
+  }
+  
+  .btn-large {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.875rem;
+  }
+  
+  .game-banner {
+    height: 120px;
+  }
+  
+  .game-icon {
+    font-size: 2.5rem;
+  }
+  
+  .modal-content {
+    padding: var(--spacing-sm);
+  }
+  
+  .wallet-actions {
+    gap: var(--spacing-xs);
+  }
+  
+  .wallet-actions .btn {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.875rem;
+  }
+}
+
+/* Landscape Phone */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero {
+    min-height: auto;
+    padding: var(--spacing-xl) 0;
+  }
+  
+  .hero-content {
+    gap: var(--spacing-lg);
+  }
+  
+  .hero-title {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .hero-description {
+    font-size: 1rem;
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .hero-stats {
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .stat-number {
+    font-size: 1.5rem;
+  }
+  
+  .game-modal-content {
+    max-height: 95vh;
+  }
+  
+  #gameCanvas {
+    max-height: 60vh;
+  }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .platform-card,
+  .game-card,
+  .wallet-card {
+    border-color: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .btn-secondary {
+    border-width: 2px;
+  }
+  
+  .platform-card,
+  .game-card {
+    border-width: 2px;
+  }
+  
+  .nav-link::after {
+    height: 3px;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .hero-particles {
+    animation: none;
+  }
+  
+  .nav-icon {
+    animation: none;
+  }
+  
+  .loading-logo {
+    animation: none;
+  }
+  
+  .health-fill {
+    animation: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .navbar,
+  .modal,
+  .toast-container,
+  .loading-screen {
+    display: none !important;
+  }
+  
+  .hero-background,
+  .hero-particles {
+    display: none;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+  
+  .hero-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .btn {
+    border: 2px solid black;
+    background: white;
+    color: black;
+  }
+}

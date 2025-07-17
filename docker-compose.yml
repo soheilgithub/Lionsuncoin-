@@ -1,0 +1,102 @@
+version: '3.8'
+
+services:
+  # Lionsuncoin Gaming Platform
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - JWT_SECRET=lionsuncoin_secret_key_2024_change_in_production
+      - CLIENT_URL=http://localhost:5000
+    volumes:
+      - ./uploads:/usr/src/app/uploads
+      - ./logs:/usr/src/app/logs
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - lionsuncoin-network
+    healthcheck:
+      test: ["CMD", "node", "healthcheck.js"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # MongoDB Database
+  mongodb:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=lionsuncoin
+      - MONGO_INITDB_ROOT_PASSWORD=gaming123
+      - MONGO_INITDB_DATABASE=lionsuncoin
+    volumes:
+      - mongodb_data:/data/db
+      - ./scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    restart: unless-stopped
+    networks:
+      - lionsuncoin-network
+
+  # Redis for Caching
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --requirepass gaming123
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - lionsuncoin-network
+
+  # Nginx Reverse Proxy (Optional)
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - app
+    restart: unless-stopped
+    networks:
+      - lionsuncoin-network
+
+  # Development Database Admin (Optional)
+  mongo-express:
+    image: mongo-express:latest
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=lionsuncoin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=gaming123
+      - ME_CONFIG_MONGODB_URL=mongodb://lionsuncoin:gaming123@mongodb:27017/
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=admin123
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+    networks:
+      - lionsuncoin-network
+    profiles:
+      - dev
+
+volumes:
+  mongodb_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  lionsuncoin-network:
+    driver: bridge

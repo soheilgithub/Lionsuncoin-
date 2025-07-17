@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    
+    <!-- Primary Meta Tags -->
+    <title>🦁 Lionsuncoin Gaming Platform - Cross-Platform Crypto Gaming</title>
+    <meta name="title" content="Lionsuncoin Gaming Platform - Cross-Platform Crypto Gaming" />
+    <meta name="description" content="Revolutionary cross-platform gaming ecosystem powered by cryptocurrency rewards. Play games, earn Lionsuncoins, and enjoy seamless gaming across all your devices." />
+    <meta name="keywords" content="gaming, cryptocurrency, blockchain, cross-platform, mobile games, web games, crypto rewards, lionsuncoin" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="author" content="Lionsuncoin Gaming Team" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://lionsuncoin.gaming" />
+    <meta property="og:title" content="🦁 Lionsuncoin Gaming Platform" />
+    <meta property="og:description" content="Revolutionary cross-platform gaming ecosystem powered by cryptocurrency rewards" />
+    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:site_name" content="Lionsuncoin Gaming" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://lionsuncoin.gaming" />
+    <meta property="twitter:title" content="🦁 Lionsuncoin Gaming Platform" />
+    <meta property="twitter:description" content="Revolutionary cross-platform gaming ecosystem powered by cryptocurrency rewards" />
+    <meta property="twitter:image" content="/twitter-image.png" />
+    <meta property="twitter:creator" content="@LionsuncoinGame" />
+    
+    <!-- Favicon and Icons -->
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="mask-icon" href="/mask-icon.svg" color="#ffd700" />
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#ffd700" />
+    <meta name="msapplication-TileColor" content="#1a1a2e" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Lionsuncoin" />
+    
+    <!-- Cross-Platform Support -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="full-screen" content="yes" />
+    <meta name="x5-fullscreen" content="true" />
+    <meta name="360-fullscreen" content="true" />
+    
+    <!-- iOS Specific -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    
+    <!-- Android Specific -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffd700" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1a2e" />
+    
+    <!-- Windows/Xbox -->
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
+    <meta name="msapplication-square70x70logo" content="/ms-icon-70x70.png" />
+    <meta name="msapplication-square150x150logo" content="/ms-icon-150x150.png" />
+    <meta name="msapplication-wide310x150logo" content="/ms-icon-310x150.png" />
+    <meta name="msapplication-square310x310logo" content="/ms-icon-310x310.png" />
+    
+    <!-- Fonts Preload -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    
+    <!-- Critical CSS -->
+    <style>
+      /* Critical path CSS for faster loading */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        color: #fff;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      
+      #root {
+        min-height: 100vh;
+        position: relative;
+      }
+      
+      .loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease-out;
+      }
+      
+      .loading-logo {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        animation: pulse 2s infinite;
+      }
+      
+      .loading-text {
+        color: #ffd700;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+      }
+      
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(255, 215, 0, 0.3);
+        border-top: 3px solid #ffd700;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      /* Platform-specific adjustments */
+      .platform-ios body {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+      
+      .platform-android {
+        overscroll-behavior: contain;
+      }
+      
+      .platform-electron {
+        user-select: none;
+        -webkit-app-region: no-drag;
+      }
+    </style>
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Lionsuncoin Gaming Platform",
+      "description": "Revolutionary cross-platform gaming ecosystem powered by cryptocurrency rewards",
+      "applicationCategory": "GameApplication",
+      "operatingSystem": ["Web", "iOS", "Android", "Windows", "macOS", "Linux"],
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "1250"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Lionsuncoin Gaming Team"
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <div id="root">
+      <!-- Loading screen -->
+      <div class="loading-screen" id="loading-screen">
+        <div class="loading-logo">🦁</div>
+        <div class="loading-text">Lionsuncoin Gaming</div>
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
+    
+    <!-- Remove loading screen once app loads -->
+    <script>
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const loadingScreen = document.getElementById('loading-screen');
+          if (loadingScreen) {
+            loadingScreen.style.opacity = '0';
+            setTimeout(() => {
+              loadingScreen.remove();
+            }, 500);
+          }
+        }, 1000);
+      });
+    </script>
+    
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
