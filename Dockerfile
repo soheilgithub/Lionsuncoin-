@@ -1,23 +1,49 @@
-FROM alpine:3.14@sha256:eb3e4e175ba6d212ba1d6e04fc0782916c08e1c9d7b45892e9796141b1d379ae
+# Use official Node.js runtime as the base image
+FROM node:18-alpine
 
-ENV BLUEBIRD_WARNINGS=0 \
-  NODE_ENV=production \
-  NODE_NO_WARNINGS=1 \
-  NPM_CONFIG_LOGLEVEL=warn \
-  SUPPRESS_NO_CONFIG_WARNING=true
+# Set the working directory in the container
+WORKDIR /usr/src/app
 
+# Install system dependencies
 RUN apk add --no-cache \
-  nodejs
+    python3 \
+    make \
+    g++ \
+    && rm -rf /var/cache/apk/*
 
-COPY package.json ./
+# Copy package.json files
+COPY package*.json ./
+COPY client/package*.json ./client/
 
-RUN  apk add --no-cache npm \
- && npm i --no-optional \
- && npm cache clean --force \
- && apk del npm
- 
-COPY . /app
+# Install dependencies
+RUN npm ci --only=production
 
-CMD ["node","/app/app.js"]
+# Install client dependencies and build
+COPY client/ ./client/
+RUN cd client && npm ci && npm run build && cd ..
 
-EXPOSE 3000
+# Copy the rest of the application code
+COPY . .
+
+# Create uploads directory
+RUN mkdir -p uploads logs
+
+# Set proper permissions
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S lionsuncoin -u 1001
+RUN chown -R lionsuncoin:nodejs /usr/src/app
+USER lionsuncoin
+
+# Expose the port the app runs on
+EXPOSE 5000
+
+# Define environment variable
+ENV NODE_ENV=production
+ENV PORT=5000
+
+# Add health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node healthcheck.js
+
+# Start the application
+CMD ["npm", "start"]

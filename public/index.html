@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lionsuncoin Gaming Platform - Cross-Platform Gaming with Cryptocurrency</title>
+    <meta name="description" content="Play cross-platform games and earn Lionsuncoin cryptocurrency. Available on iOS, PS5, Android, browsers, Windows, and Linux.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/games.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-coins nav-icon"></i>
+                <span class="brand-text">Lionsuncoin</span>
+                <span class="beta-badge">GAMING</span>
+            </div>
+            
+            <div class="nav-menu" id="navMenu">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#games" class="nav-link">Games</a>
+                <a href="#platforms" class="nav-link">Platforms</a>
+                <a href="#leaderboard" class="nav-link">Leaderboard</a>
+                <a href="#wallet" class="nav-link">Wallet</a>
+            </div>
+            
+            <div class="nav-actions">
+                <div class="coin-balance" id="coinBalance">
+                    <i class="fas fa-coins"></i>
+                    <span id="userCoins">0</span>
+                </div>
+                <button class="nav-btn login-btn" id="loginBtn">Login</button>
+                <button class="nav-btn signup-btn" id="signupBtn">Sign Up</button>
+                <div class="user-menu hidden" id="userMenu">
+                    <img src="/assets/images/default-avatar.png" alt="User Avatar" class="user-avatar" id="userAvatar">
+                    <span class="username" id="username"></span>
+                    <div class="dropdown">
+                        <button class="dropdown-btn">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#profile"><i class="fas fa-user"></i> Profile</a>
+                            <a href="#settings"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <div class="hero-particles"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="gradient-text">Cross-Platform Gaming</span>
+                    <br>with Cryptocurrency Rewards
+                </h1>
+                <p class="hero-description">
+                    Play amazing games across all platforms and earn Lionsuncoin cryptocurrency. 
+                    Available on iOS, PS5, Android, browsers, Windows, and Linux.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">10K+</span>
+                        <span class="stat-label">Active Players</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">50M+</span>
+                        <span class="stat-label">Coins Earned</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">6</span>
+                        <span class="stat-label">Platforms</span>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <button class="btn btn-primary btn-large" id="playNowBtn">
+                        <i class="fas fa-play"></i>
+                        Play Now
+                    </button>
+                    <button class="btn btn-secondary btn-large" id="learnMoreBtn">
+                        <i class="fas fa-info-circle"></i>
+                        Learn More
+                    </button>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="game-preview">
+                    <div class="game-screen">
+                        <div class="game-ui">
+                            <div class="health-bar">
+                                <div class="health-fill"></div>
+                            </div>
+                            <div class="score">Score: 12,450</div>
+                            <div class="coins">🪙 2,340</div>
+                        </div>
+                        <canvas id="heroGameCanvas" width="400" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Platforms Section -->
+    <section id="platforms" class="platforms">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Available Platforms</h2>
+                <p class="section-description">Play on your favorite device</p>
+            </div>
+            <div class="platforms-grid">
+                <div class="platform-card">
+                    <div class="platform-icon">
+                        <i class="fab fa-chrome"></i>
+                    </div>
+                    <h3>Web Browser</h3>
+                    <p>Play instantly in any modern browser</p>
+                    <div class="platform-status available">Available Now</div>
+                </div>
+                <div class="platform-card">
+                    <div class="platform-icon">
+                        <i class="fab fa-apple"></i>
+                    </div>
+                    <h3>iOS</h3>
+                    <p>iPhone and iPad support</p>
+                    <div class="platform-status available">Available Now</div>
+                </div>
+                <div class="platform-card">
+                    <div class="platform-icon">
+                        <i class="fab fa-android"></i>
+                    </div>
+                    <h3>Android</h3>
+                    <p>All Android devices</p>
+                    <div class="platform-status available">Available Now</div>
+                </div>
+                <div class="platform-card">
+                    <div class="platform-icon">
+                        <i class="fab fa-playstation"></i>
+                    </div>
+                    <h3>PlayStation 5</h3>
+                    <p>Next-gen console gaming</p>
+                    <div class="platform-status coming-soon">Coming Soon</div>
+                </div>
+                <div class="platform-card">
+                    <div class="platform-icon">
+                        <i class="fab fa-windows"></i>
+                    </div>
+                    <h3>Windows</h3>
+                    <p>Desktop gaming experience</p>
+                    <div class="platform-status available">Available Now</div>
+                </div>
+                <div class="platform-card">
+                    <div class="platform-icon">
+                        <i class="fab fa-linux"></i>
+                    </div>
+                    <h3>Linux</h3>
+                    <p>Open-source gaming</p>
+                    <div class="platform-status available">Available Now</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games Section -->
+    <section id="games" class="games">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Featured Games</h2>
+                <p class="section-description">Earn Lionsuncoin while having fun</p>
+            </div>
+            <div class="games-grid" id="gamesGrid">
+                <!-- Games will be dynamically loaded -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Leaderboard Section -->
+    <section id="leaderboard" class="leaderboard">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Global Leaderboard</h2>
+                <p class="section-description">Top players worldwide</p>
+            </div>
+            <div class="leaderboard-container">
+                <div class="leaderboard-table" id="leaderboardTable">
+                    <!-- Leaderboard will be dynamically loaded -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wallet Section -->
+    <section id="wallet" class="wallet">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Your Wallet</h2>
+                <p class="section-description">Manage your Lionsuncoin earnings</p>
+            </div>
+            <div class="wallet-content">
+                <div class="wallet-card">
+                    <div class="wallet-header">
+                        <h3>Lionsuncoin Balance</h3>
+                        <div class="balance-amount">
+                            <i class="fas fa-coins"></i>
+                            <span id="walletBalance">0</span>
+                        </div>
+                    </div>
+                    <div class="wallet-stats">
+                        <div class="stat">
+                            <span class="stat-label">Total Earned</span>
+                            <span class="stat-value" id="totalEarned">0</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Games Played</span>
+                            <span class="stat-value" id="gamesPlayed">0</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Current Level</span>
+                            <span class="stat-value" id="currentLevel">1</span>
+                        </div>
+                    </div>
+                    <div class="wallet-actions">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            Send Coins
+                        </button>
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-download"></i>
+                            Withdraw
+                        </button>
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-history"></i>
+                            History
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modals -->
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Login to Lionsuncoin</h3>
+                <button class="modal-close" data-modal="loginModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="loginForm" class="modal-form">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login
+                </button>
+            </form>
+            <div class="modal-footer">
+                <p>Don't have an account? <a href="#" id="showSignupModal">Sign up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Join Lionsuncoin</h3>
+                <button class="modal-close" data-modal="signupModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="signupForm" class="modal-form">
+                <div class="form-group">
+                    <label for="signupUsername">Username</label>
+                    <input type="text" id="signupUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPlatform">Preferred Platform</label>
+                    <select id="signupPlatform" required>
+                        <option value="web">Web Browser</option>
+                        <option value="ios">iOS</option>
+                        <option value="android">Android</option>
+                        <option value="ps5">PlayStation 5</option>
+                        <option value="windows">Windows</option>
+                        <option value="linux">Linux</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">
+                    <i class="fas fa-user-plus"></i>
+                    Create Account
+                </button>
+            </form>
+            <div class="modal-footer">
+                <p>Already have an account? <a href="#" id="showLoginModal">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Modal -->
+    <div class="modal" id="gameModal">
+        <div class="modal-content game-modal-content">
+            <div class="modal-header">
+                <h3 id="gameTitle">Game</h3>
+                <button class="modal-close" data-modal="gameModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="game-container">
+                <canvas id="gameCanvas" width="800" height="600"></canvas>
+                <div class="game-ui-overlay">
+                    <div class="game-stats">
+                        <div class="stat">
+                            <span class="label">Score:</span>
+                            <span id="gameScore">0</span>
+                        </div>
+                        <div class="stat">
+                            <span class="label">Coins:</span>
+                            <span id="gameCoins">0</span>
+                        </div>
+                        <div class="stat">
+                            <span class="label">Time:</span>
+                            <span id="gameTime">00:00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="game-controls">
+                <button class="btn btn-primary" id="startGameBtn">Start Game</button>
+                <button class="btn btn-secondary" id="pauseGameBtn">Pause</button>
+                <button class="btn btn-secondary" id="resetGameBtn">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <i class="fas fa-coins"></i>
+            </div>
+            <div class="loading-text">Loading Lionsuncoin...</div>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Scripts -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/games.js"></script>
+    <script src="/js/wallet.js"></script>
+    <script src="/js/ui.js"></script>
+</body>
+</html>
