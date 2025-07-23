@@ -39,6 +39,14 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
+// Serve static assets with long-term caching for hashed filenames
+app.use(
+  '/assets',
+  express.static(path.join(__dirname, 'public', 'assets'), {
+    maxAge: '365d',
+    immutable: true,
+  })
+);
 
 // Rate limiting
 const rateLimiter = new RateLimiterMemory({
