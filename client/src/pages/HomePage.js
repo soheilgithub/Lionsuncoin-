@@ -1,6 +1,8 @@
 import React from 'react';
 import { Container, Typography, Box, Grid, Card, CardContent, Button } from '@mui/material';
 import { motion } from 'framer-motion';
+import ControllerStatus from '../components/UI/ControllerStatus';
+import ControllerDemo from '../components/Games/ControllerDemo';
 
 const HomePage = () => {
   return (
@@ -22,15 +24,20 @@ const HomePage = () => {
           </Button>
         </Box>
 
+        {/* Controller Status */}
+        <Box mb={4}>
+          <ControllerStatus />
+        </Box>
+
         <Grid container spacing={4}>
           <Grid item xs={12} md={4}>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
-                  🎮 Multiple Games
+                  🎮 Cross-Platform Gaming
                 </Typography>
                 <Typography variant="body2">
-                  Choose from a variety of exciting games and challenges.
+                  Play with PS5, Xbox, Nintendo Switch, and PSP controllers.
                 </Typography>
               </CardContent>
             </Card>
@@ -60,6 +67,11 @@ const HomePage = () => {
             </Card>
           </Grid>
         </Grid>
+
+        {/* Controller Demo */}
+        <Box mt={6}>
+          <ControllerDemo />
+        </Box>
       </motion.div>
     </Container>
   );
