@@ -1,5 +1,6 @@
 const express = require('express');
 const { verifyToken, users } = require('./auth');
+
 const router = express.Router();
 
 // Get user profile
@@ -7,15 +8,15 @@ router.get('/profile/:userId?', verifyToken, (req, res) => {
   try {
     const requestedUserId = req.params.userId ? parseInt(req.params.userId) : req.user.userId;
     const currentUserId = req.user.userId;
-    
-    const user = users.find(u => u.id === requestedUserId);
+
+    const user = users.find((u) => u.id === requestedUserId);
     if (!user) {
       return res.status(404).json({
         error: 'User not found',
         message: 'User profile not found'
       });
     }
-    
+
     // Public profile data
     const publicProfile = {
       id: user.id,
@@ -31,18 +32,17 @@ router.get('/profile/:userId?', verifyToken, (req, res) => {
       platform: user.platform,
       isOnline: isUserOnline(user.id)
     };
-    
+
     // Add private data if viewing own profile
     if (requestedUserId === currentUserId) {
       publicProfile.email = user.email;
       publicProfile.lionsuncoins = user.lionsuncoins;
     }
-    
+
     res.json({
       profile: publicProfile,
       isOwnProfile: requestedUserId === currentUserId
     });
-    
   } catch (error) {
     console.error('Get profile error:', error);
     res.status(500).json({
@@ -55,20 +55,20 @@ router.get('/profile/:userId?', verifyToken, (req, res) => {
 // Update user profile
 router.put('/profile', verifyToken, (req, res) => {
   try {
-    const userId = req.user.userId;
+    const { userId } = req.user;
     const { username, email, platform } = req.body;
-    
-    const user = users.find(u => u.id === userId);
+
+    const user = users.find((u) => u.id === userId);
     if (!user) {
       return res.status(404).json({
         error: 'User not found',
         message: 'User account not found'
       });
     }
-    
+
     // Check if new username is already taken (if provided)
     if (username && username !== user.username) {
-      const existingUser = users.find(u => u.username === username && u.id !== userId);
+      const existingUser = users.find((u) => u.username === username && u.id !== userId);
       if (existingUser) {
         return res.status(409).json({
           error: 'Username taken',
@@ -77,10 +77,10 @@ router.put('/profile', verifyToken, (req, res) => {
       }
       user.username = username;
     }
-    
+
     // Check if new email is already taken (if provided)
     if (email && email !== user.email) {
-      const existingUser = users.find(u => u.email === email && u.id !== userId);
+      const existingUser = users.find((u) => u.email === email && u.id !== userId);
       if (existingUser) {
         return res.status(409).json({
           error: 'Email taken',
@@ -89,7 +89,7 @@ router.put('/profile', verifyToken, (req, res) => {
       }
       user.email = email;
     }
-    
+
     // Update platform if provided
     if (platform) {
       const validPlatforms = ['web', 'ios', 'android', 'windows', 'linux', 'ps5'];
@@ -97,7 +97,7 @@ router.put('/profile', verifyToken, (req, res) => {
         user.platform = platform.toLowerCase();
       }
     }
-    
+
     res.json({
       message: 'Profile updated successfully',
       profile: {
@@ -109,7 +109,6 @@ router.put('/profile', verifyToken, (req, res) => {
         experience: user.experience
       }
     });
-    
   } catch (error) {
     console.error('Update profile error:', error);
     res.status(500).json({
@@ -123,19 +122,19 @@ router.put('/profile', verifyToken, (req, res) => {
 router.get('/achievements/:userId?', verifyToken, (req, res) => {
   try {
     const userId = req.params.userId ? parseInt(req.params.userId) : req.user.userId;
-    
-    const user = users.find(u => u.id === userId);
+
+    const user = users.find((u) => u.id === userId);
     if (!user) {
       return res.status(404).json({
         error: 'User not found',
         message: 'User not found'
       });
     }
-    
+
     const achievements = getUserAchievements(userId);
     const totalAchievements = getAllAchievements().length;
-    const unlockedCount = achievements.filter(a => a.unlocked).length;
-    
+    const unlockedCount = achievements.filter((a) => a.unlocked).length;
+
     res.json({
       achievements,
       stats: {
@@ -144,7 +143,6 @@ router.get('/achievements/:userId?', verifyToken, (req, res) => {
         completionRate: ((unlockedCount / totalAchievements) * 100).toFixed(1)
       }
     });
-    
   } catch (error) {
     console.error('Get achievements error:', error);
     res.status(500).json({
@@ -158,25 +156,24 @@ router.get('/achievements/:userId?', verifyToken, (req, res) => {
 router.get('/search', verifyToken, (req, res) => {
   try {
     const { query, page = 1, limit = 20 } = req.query;
-    
+
     if (!query || query.trim().length < 2) {
       return res.status(400).json({
         error: 'Invalid search query',
         message: 'Search query must be at least 2 characters long'
       });
     }
-    
+
     const searchTerm = query.toLowerCase().trim();
-    const filteredUsers = users.filter(user => 
-      user.username.toLowerCase().includes(searchTerm)
-    );
-    
+    const filteredUsers = users.filter((user) =>
+      user.username.toLowerCase().includes(searchTerm));
+
     // Pagination
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + parseInt(limit);
     const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
-    
-    const searchResults = paginatedUsers.map(user => ({
+
+    const searchResults = paginatedUsers.map((user) => ({
       id: user.id,
       username: user.username,
       level: user.level,
@@ -186,7 +183,7 @@ router.get('/search', verifyToken, (req, res) => {
       lastActive: user.lastLogin,
       isOnline: isUserOnline(user.id)
     }));
-    
+
     res.json({
       results: searchResults,
       pagination: {
@@ -197,7 +194,6 @@ router.get('/search', verifyToken, (req, res) => {
         hasPrev: page > 1
       }
     });
-    
   } catch (error) {
     console.error('Search users error:', error);
     res.status(500).json({
@@ -211,9 +207,9 @@ router.get('/search', verifyToken, (req, res) => {
 router.get('/top', (req, res) => {
   try {
     const { category = 'level', limit = 10 } = req.query;
-    
-    let sortedUsers = [...users];
-    
+
+    const sortedUsers = [...users];
+
     switch (category) {
       case 'level':
         sortedUsers.sort((a, b) => b.level - a.level || b.experience - a.experience);
@@ -237,7 +233,7 @@ router.get('/top', (req, res) => {
       default:
         sortedUsers.sort((a, b) => b.level - a.level);
     }
-    
+
     const topPlayers = sortedUsers.slice(0, parseInt(limit)).map((user, index) => ({
       rank: index + 1,
       id: user.id,
@@ -251,13 +247,12 @@ router.get('/top', (req, res) => {
       platform: user.platform,
       lastActive: user.lastLogin
     }));
-    
+
     res.json({
       category,
       topPlayers,
       timestamp: new Date().toISOString()
     });
-    
   } catch (error) {
     console.error('Get top players error:', error);
     res.status(500).json({
@@ -269,15 +264,15 @@ router.get('/top', (req, res) => {
 
 // Helper functions
 function getUserAchievements(userId) {
-  const user = users.find(u => u.id === userId);
+  const user = users.find((u) => u.id === userId);
   if (!user) return [];
-  
+
   const allAchievements = getAllAchievements();
-  
-  return allAchievements.map(achievement => {
+
+  return allAchievements.map((achievement) => {
     const progress = calculateAchievementProgress(user, achievement);
     const unlocked = progress >= achievement.target;
-    
+
     return {
       ...achievement,
       progress,

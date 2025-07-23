@@ -46,7 +46,7 @@ class LionsuncoinApp {
     // Navigation toggle for mobile
     const navToggle = document.getElementById('navToggle');
     const navMenu = document.getElementById('navMenu');
-    
+
     if (navToggle && navMenu) {
       navToggle.addEventListener('click', () => {
         navMenu.classList.toggle('active');
@@ -54,7 +54,7 @@ class LionsuncoinApp {
     }
 
     // Smooth scrolling for navigation links
-    document.querySelectorAll('.nav-link').forEach(link => {
+    document.querySelectorAll('.nav-link').forEach((link) => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
         const target = link.getAttribute('href');
@@ -98,7 +98,7 @@ class LionsuncoinApp {
 
   setupModals() {
     // Modal close buttons
-    document.querySelectorAll('.modal-close').forEach(btn => {
+    document.querySelectorAll('.modal-close').forEach((btn) => {
       btn.addEventListener('click', (e) => {
         const modalId = btn.getAttribute('data-modal');
         if (modalId) {
@@ -108,7 +108,7 @@ class LionsuncoinApp {
     });
 
     // Close modals when clicking outside
-    document.querySelectorAll('.modal').forEach(modal => {
+    document.querySelectorAll('.modal').forEach((modal) => {
       modal.addEventListener('click', (e) => {
         if (e.target === modal) {
           modal.classList.remove('active');
@@ -157,7 +157,7 @@ class LionsuncoinApp {
   initializeSocket() {
     try {
       this.socket = io();
-      
+
       this.socket.on('connect', () => {
         console.log('Connected to server');
       });
@@ -199,10 +199,10 @@ class LionsuncoinApp {
     const gamesGrid = document.getElementById('gamesGrid');
     if (!gamesGrid) return;
 
-    gamesGrid.innerHTML = games.map(game => this.createGameCard(game)).join('');
+    gamesGrid.innerHTML = games.map((game) => this.createGameCard(game)).join('');
 
     // Add event listeners to play buttons
-    gamesGrid.querySelectorAll('.play-btn').forEach(btn => {
+    gamesGrid.querySelectorAll('.play-btn').forEach((btn) => {
       btn.addEventListener('click', (e) => {
         const gameId = btn.getAttribute('data-game-id');
         this.playGame(gameId);
@@ -210,7 +210,7 @@ class LionsuncoinApp {
     });
 
     // Add event listeners to favorite buttons
-    gamesGrid.querySelectorAll('.favorite-btn').forEach(btn => {
+    gamesGrid.querySelectorAll('.favorite-btn').forEach((btn) => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         btn.classList.toggle('active');
@@ -253,7 +253,7 @@ class LionsuncoinApp {
           </div>
           <div class="game-platforms">
             <div class="platforms-list">
-              ${game.platforms.map(platform => `
+              ${game.platforms.map((platform) => `
                 <span class="platform-badge">
                   <i class="${platformIcons[platform] || 'fas fa-desktop'}"></i>
                   ${platform}
@@ -314,7 +314,7 @@ class LionsuncoinApp {
     const rowsHtml = leaderboard.map((player, index) => {
       const rank = index + 1;
       const rankClass = getRankClass(rank);
-      
+
       return `
         <div class="leaderboard-row">
           <div class="rank ${rankClass}">#${rank}</div>
@@ -346,7 +346,7 @@ class LionsuncoinApp {
     try {
       const response = await fetch('/api/profile', {
         headers: {
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         }
       });
 
@@ -415,7 +415,7 @@ class LionsuncoinApp {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`
         },
         body: JSON.stringify({
           gameType: gameId,
@@ -512,7 +512,7 @@ class LionsuncoinApp {
 
     const ctx = canvas.getContext('2d');
     let animationId;
-    let particles = [];
+    const particles = [];
 
     // Create particles
     for (let i = 0; i < 20; i++) {
@@ -530,7 +530,7 @@ class LionsuncoinApp {
       ctx.fillStyle = 'rgba(26, 26, 58, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      particles.forEach(particle => {
+      particles.forEach((particle) => {
         particle.x += particle.vx;
         particle.y += particle.vy;
 
@@ -551,13 +551,13 @@ class LionsuncoinApp {
 
   detectPlatform() {
     const userAgent = navigator.userAgent.toLowerCase();
-    
+
     if (/android/.test(userAgent)) return 'android';
     if (/iphone|ipad|ipod/.test(userAgent)) return 'ios';
     if (/windows/.test(userAgent)) return 'windows';
     if (/linux/.test(userAgent)) return 'linux';
     if (/mac/.test(userAgent)) return 'web';
-    
+
     return 'web';
   }
 
@@ -573,7 +573,7 @@ class LionsuncoinApp {
   }
 
   setActiveNavLink(activeLink) {
-    document.querySelectorAll('.nav-link').forEach(link => {
+    document.querySelectorAll('.nav-link').forEach((link) => {
       link.classList.remove('active');
     });
     activeLink.classList.add('active');
@@ -595,7 +595,7 @@ class LionsuncoinApp {
 
     // Highlight current section in navigation
     let current = '';
-    sections.forEach(section => {
+    sections.forEach((section) => {
       const sectionTop = section.offsetTop - 100;
       const sectionHeight = section.clientHeight;
       if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
@@ -603,7 +603,7 @@ class LionsuncoinApp {
       }
     });
 
-    navLinks.forEach(link => {
+    navLinks.forEach((link) => {
       link.classList.remove('active');
       if (link.getAttribute('href') === `#${current}`) {
         link.classList.add('active');
@@ -678,7 +678,7 @@ class BaseGame {
 
   setupCanvas() {
     if (!this.canvas) return;
-    
+
     // Make canvas responsive
     this.canvas.width = 800;
     this.canvas.height = 600;
@@ -745,7 +745,7 @@ class BaseGame {
 
     if (scoreElement) scoreElement.textContent = this.score.toLocaleString();
     if (coinsElement) coinsElement.textContent = this.coins.toLocaleString();
-    
+
     if (timeElement && this.startTime) {
       const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
       const minutes = Math.floor(elapsed / 60);
@@ -756,20 +756,20 @@ class BaseGame {
 
   async endGame() {
     this.isRunning = false;
-    
+
     try {
       const duration = this.startTime ? Math.floor((Date.now() - this.startTime) / 1000) : 0;
-      
+
       const response = await fetch('/api/game/complete', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`
         },
         body: JSON.stringify({
           sessionId: this.sessionId,
           score: this.score,
-          duration: duration
+          duration
         })
       });
 
@@ -787,11 +787,11 @@ class BaseGame {
   showGameResults(result) {
     // You could show a results modal here
     app.showToast(`Game completed! Earned ${result.coinsEarned} coins!`, 'success');
-    
+
     if (result.newLevel > app.currentUser.level) {
       app.showToast(`Level up! You're now level ${result.newLevel}!`, 'success');
     }
-    
+
     // Update user data
     if (app.currentUser) {
       app.currentUser.lionsunCoins = result.totalCoins;
@@ -806,7 +806,9 @@ class BaseGame {
 class DemoGame extends BaseGame {
   constructor(sessionId) {
     super(sessionId);
-    this.player = { x: 400, y: 300, size: 20, color: '#f59e0b' };
+    this.player = {
+      x: 400, y: 300, size: 20, color: '#f59e0b'
+    };
     this.targets = [];
     this.setupControls();
   }
@@ -843,17 +845,15 @@ class DemoGame extends BaseGame {
 
     // Remove old targets
     this.targets = this.targets.filter((target, index) => {
-      const distance = Math.sqrt(
-        Math.pow(target.x - this.player.x, 2) + 
-        Math.pow(target.y - this.player.y, 2)
-      );
-      
+      const distance = Math.sqrt((target.x - this.player.x) ** 2
+        + (target.y - this.player.y) ** 2);
+
       if (distance < this.player.size + target.size) {
         this.score += 50;
         this.coins += 5;
         return false;
       }
-      
+
       return index < 10; // Keep max 10 targets
     });
 
@@ -867,7 +867,7 @@ class DemoGame extends BaseGame {
     this.clearCanvas();
 
     // Draw targets
-    this.targets.forEach(target => {
+    this.targets.forEach((target) => {
       this.ctx.fillStyle = target.color;
       this.ctx.beginPath();
       this.ctx.arc(target.x, target.y, target.size, 0, Math.PI * 2);

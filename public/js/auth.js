@@ -33,15 +33,15 @@ class AuthManager {
   setupValidation() {
     // Real-time validation for forms
     const inputs = document.querySelectorAll('input[type="email"], input[type="password"], input[type="text"]');
-    
-    inputs.forEach(input => {
+
+    inputs.forEach((input) => {
       input.addEventListener('blur', () => this.validateField(input));
       input.addEventListener('input', () => this.clearFieldError(input));
     });
 
     // Password strength indicator
     const passwordInputs = document.querySelectorAll('input[type="password"]');
-    passwordInputs.forEach(input => {
+    passwordInputs.forEach((input) => {
       if (input.id.includes('signup')) {
         input.addEventListener('input', () => this.showPasswordStrength(input));
       }
@@ -52,10 +52,10 @@ class AuthManager {
     const value = field.value.trim();
     const fieldType = field.type;
     const fieldName = field.name || field.id;
-    
+
     // Remove existing error
     this.clearFieldError(field);
-    
+
     let isValid = true;
     let errorMessage = '';
 
@@ -69,7 +69,7 @@ class AuthManager {
           isValid = false;
         }
         break;
-        
+
       case 'password':
         if (!value) {
           errorMessage = 'Password is required';
@@ -79,7 +79,7 @@ class AuthManager {
           isValid = false;
         }
         break;
-        
+
       case 'text':
         if (fieldName.includes('username')) {
           if (!value) {
@@ -105,9 +105,9 @@ class AuthManager {
 
   showFieldError(field, message) {
     this.clearFieldError(field);
-    
+
     field.style.borderColor = '#ef4444';
-    
+
     const errorDiv = document.createElement('div');
     errorDiv.className = 'field-error';
     errorDiv.style.cssText = `
@@ -119,7 +119,7 @@ class AuthManager {
       gap: 0.25rem;
     `;
     errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i>${message}`;
-    
+
     field.parentNode.appendChild(errorDiv);
   }
 
@@ -134,7 +134,7 @@ class AuthManager {
   showPasswordStrength(passwordField) {
     const password = passwordField.value;
     const strength = this.calculatePasswordStrength(password);
-    
+
     // Remove existing strength indicator
     const existingIndicator = passwordField.parentNode.querySelector('.password-strength');
     if (existingIndicator) {
@@ -214,21 +214,21 @@ class AuthManager {
 
   calculatePasswordStrength(password) {
     let score = 0;
-    
+
     // Length
     if (password.length >= 8) score++;
     if (password.length >= 12) score++;
-    
+
     // Character types
     if (/[a-z]/.test(password)) score++;
     if (/[A-Z]/.test(password)) score++;
     if (/[0-9]/.test(password)) score++;
     if (/[^a-zA-Z0-9]/.test(password)) score++;
-    
+
     // Reduce score for common patterns
     if (/(.)\1{2,}/.test(password)) score--; // Repeated characters
     if (/123|abc|qwe/i.test(password)) score--; // Sequential characters
-    
+
     return Math.max(1, Math.min(5, score));
   }
 
@@ -238,11 +238,11 @@ class AuthManager {
   }
 
   isStrongPassword(password) {
-    return password.length >= 8 &&
-           /[a-z]/.test(password) &&
-           /[A-Z]/.test(password) &&
-           /[0-9]/.test(password) &&
-           /[^a-zA-Z0-9]/.test(password);
+    return password.length >= 8
+           && /[a-z]/.test(password)
+           && /[A-Z]/.test(password)
+           && /[0-9]/.test(password)
+           && /[^a-zA-Z0-9]/.test(password);
   }
 
   async handleLogin(form) {
@@ -253,7 +253,7 @@ class AuthManager {
     // Validate fields
     const emailField = document.getElementById('loginEmail');
     const passwordField = document.getElementById('loginPassword');
-    
+
     const isEmailValid = this.validateField(emailField);
     const isPasswordValid = this.validateField(passwordField);
 
@@ -281,7 +281,7 @@ class AuthManager {
       if (response.ok) {
         // Store token
         localStorage.setItem('authToken', data.token);
-        
+
         // Update UI
         if (window.app) {
           window.app.setCurrentUser(data.user);
@@ -318,7 +318,7 @@ class AuthManager {
     const usernameField = document.getElementById('signupUsername');
     const emailField = document.getElementById('signupEmail');
     const passwordField = document.getElementById('signupPassword');
-    
+
     const isUsernameValid = this.validateField(usernameField);
     const isEmailValid = this.validateField(emailField);
     const isPasswordValid = this.validateField(passwordField);
@@ -345,7 +345,9 @@ class AuthManager {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ username, email, password, platform })
+        body: JSON.stringify({
+          username, email, password, platform
+        })
       });
 
       const data = await response.json();
@@ -353,7 +355,7 @@ class AuthManager {
       if (response.ok) {
         // Store token
         localStorage.setItem('authToken', data.token);
-        
+
         // Update UI
         if (window.app) {
           window.app.setCurrentUser(data.user);
@@ -381,15 +383,15 @@ class AuthManager {
 
   clearAllFieldErrors(form) {
     const errorElements = form.querySelectorAll('.field-error');
-    errorElements.forEach(error => error.remove());
-    
+    errorElements.forEach((error) => error.remove());
+
     const fields = form.querySelectorAll('input');
-    fields.forEach(field => {
+    fields.forEach((field) => {
       field.style.borderColor = '';
     });
 
     const strengthIndicators = form.querySelectorAll('.password-strength');
-    strengthIndicators.forEach(indicator => indicator.remove());
+    strengthIndicators.forEach((indicator) => indicator.remove());
   }
 
   // Social login methods (for future implementation)
@@ -424,10 +426,8 @@ class AuthManager {
           window.app.showToast('Failed to connect MetaMask wallet', 'error');
         }
       }
-    } else {
-      if (window.app) {
-        window.app.showToast('MetaMask not detected. Please install MetaMask!', 'warning');
-      }
+    } else if (window.app) {
+      window.app.showToast('MetaMask not detected. Please install MetaMask!', 'warning');
     }
   }
 
@@ -468,7 +468,7 @@ class AuthManager {
 
   isTokenExpired(token) {
     if (!token) return true;
-    
+
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       return Date.now() >= payload.exp * 1000;
@@ -505,7 +505,7 @@ class AuthManager {
       const response = await fetch('/api/auth/refresh', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         }
       });
 
@@ -536,7 +536,7 @@ class AuthManager {
       const response = await fetch('/api/auth/2fa/enable', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         }
       });
 
@@ -546,9 +546,8 @@ class AuthManager {
           window.app.showToast('Two-factor authentication enabled!', 'success');
         }
         return data.qrCode; // QR code for authenticator app
-      } else {
-        throw new Error('Failed to enable 2FA');
       }
+      throw new Error('Failed to enable 2FA');
     } catch (error) {
       console.error('2FA enable error:', error);
       if (window.app) {
@@ -597,10 +596,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const email = document.getElementById('loginEmail').value;
       if (email) {
         window.authManager.requestPasswordReset(email);
-      } else {
-        if (window.app) {
-          window.app.showToast('Please enter your email address first', 'warning');
-        }
+      } else if (window.app) {
+        window.app.showToast('Please enter your email address first', 'warning');
       }
     });
   }

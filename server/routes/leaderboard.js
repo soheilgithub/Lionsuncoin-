@@ -1,14 +1,15 @@
 const express = require('express');
 const { verifyToken, users } = require('./auth');
+
 const router = express.Router();
 
 // Get global leaderboard
 router.get('/global', (req, res) => {
   try {
     const { category = 'level', limit = 50, page = 1 } = req.query;
-    
-    let sortedUsers = [...users];
-    
+
+    const sortedUsers = [...users];
+
     switch (category) {
       case 'level':
         sortedUsers.sort((a, b) => b.level - a.level || b.experience - a.experience);
@@ -32,12 +33,12 @@ router.get('/global', (req, res) => {
       default:
         sortedUsers.sort((a, b) => b.level - a.level);
     }
-    
+
     // Pagination
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + parseInt(limit);
     const paginatedUsers = sortedUsers.slice(startIndex, endIndex);
-    
+
     const leaderboard = paginatedUsers.map((user, index) => ({
       rank: startIndex + index + 1,
       id: user.id,
@@ -52,7 +53,7 @@ router.get('/global', (req, res) => {
       lastActive: user.lastLogin,
       change: Math.floor(Math.random() * 10) - 5 // Mock rank change
     }));
-    
+
     res.json({
       category,
       leaderboard,
@@ -65,7 +66,6 @@ router.get('/global', (req, res) => {
       },
       lastUpdated: new Date().toISOString()
     });
-    
   } catch (error) {
     console.error('Get global leaderboard error:', error);
     res.status(500).json({
@@ -80,16 +80,16 @@ router.get('/game/:gameId', (req, res) => {
   try {
     const { gameId } = req.params;
     const { limit = 20, period = 'all' } = req.query;
-    
+
     // Mock game scores - in real implementation, get from database
     const gameScores = generateMockGameScores(gameId, users);
-    
+
     // Filter by time period
     let filteredScores = gameScores;
     if (period !== 'all') {
       const now = new Date();
       let periodStart;
-      
+
       switch (period) {
         case 'day':
           periodStart = new Date(now.getTime() - 24 * 60 * 60 * 1000);
@@ -103,21 +103,20 @@ router.get('/game/:gameId', (req, res) => {
         default:
           periodStart = new Date(0);
       }
-      
-      filteredScores = gameScores.filter(score => 
-        new Date(score.timestamp) >= periodStart
-      );
+
+      filteredScores = gameScores.filter((score) =>
+        new Date(score.timestamp) >= periodStart);
     }
-    
+
     // Sort by score and take top entries
     filteredScores.sort((a, b) => b.score - a.score);
     const topScores = filteredScores.slice(0, parseInt(limit));
-    
+
     const leaderboard = topScores.map((score, index) => ({
       rank: index + 1,
       ...score
     }));
-    
+
     res.json({
       gameId,
       period,
@@ -125,7 +124,6 @@ router.get('/game/:gameId', (req, res) => {
       totalEntries: filteredScores.length,
       lastUpdated: new Date().toISOString()
     });
-    
   } catch (error) {
     console.error('Get game leaderboard error:', error);
     res.status(500).json({
@@ -138,19 +136,19 @@ router.get('/game/:gameId', (req, res) => {
 // Get user's position in leaderboard
 router.get('/position/:category?', verifyToken, (req, res) => {
   try {
-    const userId = req.user.userId;
+    const { userId } = req.user;
     const { category = 'level' } = req.params;
-    
-    const user = users.find(u => u.id === userId);
+
+    const user = users.find((u) => u.id === userId);
     if (!user) {
       return res.status(404).json({
         error: 'User not found',
         message: 'User account not found'
       });
     }
-    
-    let sortedUsers = [...users];
-    
+
+    const sortedUsers = [...users];
+
     // Sort based on category
     switch (category) {
       case 'level':
@@ -175,11 +173,11 @@ router.get('/position/:category?', verifyToken, (req, res) => {
       default:
         sortedUsers.sort((a, b) => b.level - a.level);
     }
-    
-    const userPosition = sortedUsers.findIndex(u => u.id === userId) + 1;
+
+    const userPosition = sortedUsers.findIndex((u) => u.id === userId) + 1;
     const totalUsers = sortedUsers.length;
     const percentile = totalUsers > 1 ? ((totalUsers - userPosition) / (totalUsers - 1) * 100).toFixed(1) : '100.0';
-    
+
     // Get nearby users (5 above and 5 below)
     const userIndex = userPosition - 1;
     const startIndex = Math.max(0, userIndex - 5);
@@ -195,7 +193,7 @@ router.get('/position/:category?', verifyToken, (req, res) => {
       winRate: u.gamesPlayed > 0 ? ((u.gamesWon / u.gamesPlayed) * 100).toFixed(1) : '0.0',
       isCurrentUser: u.id === userId
     }));
-    
+
     res.json({
       category,
       position: {
@@ -215,7 +213,6 @@ router.get('/position/:category?', verifyToken, (req, res) => {
         gamesWon: user.gamesWon
       }
     });
-    
   } catch (error) {
     console.error('Get user position error:', error);
     res.status(500).json({
@@ -230,7 +227,7 @@ router.get('/platform/:platform', (req, res) => {
   try {
     const { platform } = req.params;
     const { category = 'level', limit = 20 } = req.query;
-    
+
     const validPlatforms = ['web', 'ios', 'android', 'windows', 'linux', 'ps5'];
     if (!validPlatforms.includes(platform.toLowerCase())) {
       return res.status(400).json({
@@ -238,10 +235,10 @@ router.get('/platform/:platform', (req, res) => {
         message: `Platform must be one of: ${validPlatforms.join(', ')}`
       });
     }
-    
+
     // Filter users by platform
-    let platformUsers = users.filter(u => u.platform === platform.toLowerCase());
-    
+    const platformUsers = users.filter((u) => u.platform === platform.toLowerCase());
+
     // Sort based on category
     switch (category) {
       case 'level':
@@ -259,9 +256,9 @@ router.get('/platform/:platform', (req, res) => {
       default:
         platformUsers.sort((a, b) => b.level - a.level);
     }
-    
+
     const topUsers = platformUsers.slice(0, parseInt(limit));
-    
+
     const leaderboard = topUsers.map((user, index) => ({
       rank: index + 1,
       id: user.id,
@@ -274,7 +271,7 @@ router.get('/platform/:platform', (req, res) => {
       winRate: user.gamesPlayed > 0 ? ((user.gamesWon / user.gamesPlayed) * 100).toFixed(1) : '0.0',
       lastActive: user.lastLogin
     }));
-    
+
     res.json({
       platform: platform.toLowerCase(),
       category,
@@ -282,7 +279,6 @@ router.get('/platform/:platform', (req, res) => {
       totalUsers: platformUsers.length,
       lastUpdated: new Date().toISOString()
     });
-    
   } catch (error) {
     console.error('Get platform leaderboard error:', error);
     res.status(500).json({
@@ -295,14 +291,14 @@ router.get('/platform/:platform', (req, res) => {
 // Helper function to generate mock game scores
 function generateMockGameScores(gameId, users) {
   const scores = [];
-  
-  users.forEach(user => {
+
+  users.forEach((user) => {
     const numScores = Math.floor(Math.random() * 5) + 1; // 1-5 scores per user
-    
+
     for (let i = 0; i < numScores; i++) {
       const daysAgo = Math.floor(Math.random() * 30); // Random date within last 30 days
       const timestamp = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
-      
+
       scores.push({
         userId: user.id,
         username: user.username,
@@ -314,7 +310,7 @@ function generateMockGameScores(gameId, users) {
       });
     }
   });
-  
+
   return scores;
 }
 

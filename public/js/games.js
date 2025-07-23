@@ -17,7 +17,7 @@ class PuzzleGame extends BaseGame {
     // Create ordered tiles
     this.tiles = Array.from({ length: 15 }, (_, i) => i + 1);
     this.tiles.push(null); // Empty space
-    
+
     // Shuffle tiles
     this.shuffleTiles();
     this.setupControls();
@@ -48,7 +48,7 @@ class PuzzleGame extends BaseGame {
     directions.forEach(([dRow, dCol]) => {
       const newRow = emptyRow + dRow;
       const newCol = emptyCol + dCol;
-      
+
       if (newRow >= 0 && newRow < this.gridSize && newCol >= 0 && newCol < this.gridSize) {
         moves.push(newRow * this.gridSize + newCol);
       }
@@ -86,7 +86,7 @@ class PuzzleGame extends BaseGame {
       this.moves++;
       this.score = Math.max(0, 1000 - this.moves * 10);
       this.coins = Math.floor(this.score / 100);
-      
+
       if (this.checkWin()) {
         this.isWin = true;
         this.score += 500; // Bonus for winning
@@ -146,11 +146,9 @@ class PuzzleGame extends BaseGame {
 
         // Tile number
         this.ctx.fillStyle = '#ffffff';
-        this.ctx.fillText(
-          this.tiles[i].toString(),
+        this.ctx.fillText(this.tiles[i].toString(),
           x + this.tileSize / 2,
-          y + this.tileSize / 2
-        );
+          y + this.tileSize / 2);
       }
     }
 
@@ -164,7 +162,7 @@ class PuzzleGame extends BaseGame {
     if (this.isWin) {
       this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-      
+
       this.ctx.fillStyle = '#f59e0b';
       this.ctx.font = '32px Arial';
       this.ctx.textAlign = 'center';
@@ -247,28 +245,28 @@ class SpaceDefender extends BaseGame {
   createParticles(x, y, color = '#f59e0b') {
     for (let i = 0; i < 8; i++) {
       this.particles.push({
-        x: x,
-        y: y,
+        x,
+        y,
         vx: (Math.random() - 0.5) * 6,
         vy: (Math.random() - 0.5) * 6,
         life: 30,
         maxLife: 30,
-        color: color
+        color
       });
     }
   }
 
   update() {
     // Player movement
-    if (this.keys['ArrowLeft'] || this.keys['KeyA']) {
+    if (this.keys.ArrowLeft || this.keys.KeyA) {
       this.player.x = Math.max(0, this.player.x - this.player.speed);
     }
-    if (this.keys['ArrowRight'] || this.keys['KeyD']) {
+    if (this.keys.ArrowRight || this.keys.KeyD) {
       this.player.x = Math.min(this.canvas.width - this.player.width, this.player.x + this.player.speed);
     }
 
     // Update bullets
-    this.bullets = this.bullets.filter(bullet => {
+    this.bullets = this.bullets.filter((bullet) => {
       bullet.y -= bullet.speed;
       return bullet.y > -bullet.height;
     });
@@ -281,16 +279,16 @@ class SpaceDefender extends BaseGame {
     }
 
     // Update enemies
-    this.enemies = this.enemies.filter(enemy => {
+    this.enemies = this.enemies.filter((enemy) => {
       enemy.y += enemy.speed;
-      
+
       // Check collision with player
       if (this.checkCollision(enemy, this.player)) {
         this.createParticles(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#ef4444');
         this.score = Math.max(0, this.score - 100);
         return false;
       }
-      
+
       return enemy.y < this.canvas.height + enemy.height;
     });
 
@@ -309,7 +307,7 @@ class SpaceDefender extends BaseGame {
     }
 
     // Update particles
-    this.particles = this.particles.filter(particle => {
+    this.particles = this.particles.filter((particle) => {
       particle.x += particle.vx;
       particle.y += particle.vy;
       particle.life--;
@@ -323,10 +321,10 @@ class SpaceDefender extends BaseGame {
   }
 
   checkCollision(rect1, rect2) {
-    return rect1.x < rect2.x + rect2.width &&
-           rect1.x + rect1.width > rect2.x &&
-           rect1.y < rect2.y + rect2.height &&
-           rect1.y + rect1.height > rect2.y;
+    return rect1.x < rect2.x + rect2.width
+           && rect1.x + rect1.width > rect2.x
+           && rect1.y < rect2.y + rect2.height
+           && rect1.y + rect1.height > rect2.y;
   }
 
   render() {
@@ -338,18 +336,18 @@ class SpaceDefender extends BaseGame {
 
     // Draw bullets
     this.ctx.fillStyle = '#ffffff';
-    this.bullets.forEach(bullet => {
+    this.bullets.forEach((bullet) => {
       this.ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
     });
 
     // Draw enemies
     this.ctx.fillStyle = '#ef4444';
-    this.enemies.forEach(enemy => {
+    this.enemies.forEach((enemy) => {
       this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
     });
 
     // Draw particles
-    this.particles.forEach(particle => {
+    this.particles.forEach((particle) => {
       const alpha = particle.life / particle.maxLife;
       this.ctx.fillStyle = particle.color + Math.floor(alpha * 255).toString(16).padStart(2, '0');
       this.ctx.fillRect(particle.x, particle.y, 3, 3);
@@ -450,7 +448,7 @@ class CoinRunner extends BaseGame {
 
   jump() {
     if (!this.isRunning || this.isPaused) return;
-    
+
     this.player.velY = this.jumpPower;
     this.player.onGround = false;
   }
@@ -466,7 +464,7 @@ class CoinRunner extends BaseGame {
 
     // Check platform collisions
     this.player.onGround = false;
-    this.platforms.forEach(platform => {
+    this.platforms.forEach((platform) => {
       if (this.checkCollision(this.player, platform) && this.player.velY > 0) {
         this.player.y = platform.y - this.player.height;
         this.player.velY = 0;
@@ -475,7 +473,7 @@ class CoinRunner extends BaseGame {
     });
 
     // Check coin collection
-    this.coins.forEach(coin => {
+    this.coins.forEach((coin) => {
       if (!coin.collected && this.checkCollision(this.player, coin)) {
         coin.collected = true;
         this.score += 50;
@@ -484,7 +482,7 @@ class CoinRunner extends BaseGame {
     });
 
     // Check obstacle collisions
-    this.obstacles.forEach(obstacle => {
+    this.obstacles.forEach((obstacle) => {
       if (this.checkCollision(this.player, obstacle)) {
         this.endGame();
       }
@@ -503,10 +501,10 @@ class CoinRunner extends BaseGame {
   }
 
   checkCollision(rect1, rect2) {
-    return rect1.x < rect2.x + rect2.width &&
-           rect1.x + rect1.width > rect2.x &&
-           rect1.y < rect2.y + rect2.height &&
-           rect1.y + rect1.height > rect2.y;
+    return rect1.x < rect2.x + rect2.width
+           && rect1.x + rect1.width > rect2.x
+           && rect1.y < rect2.y + rect2.height
+           && rect1.y + rect1.height > rect2.y;
   }
 
   render() {
@@ -518,13 +516,13 @@ class CoinRunner extends BaseGame {
 
     // Draw platforms
     this.ctx.fillStyle = '#8b5cf6';
-    this.platforms.forEach(platform => {
+    this.platforms.forEach((platform) => {
       this.ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
     });
 
     // Draw coins
     this.ctx.fillStyle = '#f59e0b';
-    this.coins.forEach(coin => {
+    this.coins.forEach((coin) => {
       if (!coin.collected) {
         this.ctx.beginPath();
         this.ctx.arc(coin.x + coin.width / 2, coin.y + coin.height / 2, coin.width / 2, 0, Math.PI * 2);
@@ -534,7 +532,7 @@ class CoinRunner extends BaseGame {
 
     // Draw obstacles
     this.ctx.fillStyle = '#ef4444';
-    this.obstacles.forEach(obstacle => {
+    this.obstacles.forEach((obstacle) => {
       this.ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
     });
 
@@ -563,9 +561,15 @@ class StrategyEmpire extends BaseGame {
     this.resources = { gold: 100, population: 10 };
     this.selectedCell = null;
     this.buildingTypes = [
-      { name: 'House', cost: 50, produces: 'population', amount: 5 },
-      { name: 'Mine', cost: 100, produces: 'gold', amount: 20 },
-      { name: 'Farm', cost: 75, produces: 'food', amount: 15 }
+      {
+        name: 'House', cost: 50, produces: 'population', amount: 5
+      },
+      {
+        name: 'Mine', cost: 100, produces: 'gold', amount: 20
+      },
+      {
+        name: 'Farm', cost: 75, produces: 'food', amount: 15
+      }
     ];
     this.setupControls();
   }
@@ -591,14 +595,14 @@ class StrategyEmpire extends BaseGame {
   }
 
   handleCellClick(x, y) {
-    const existingBuilding = this.buildings.find(b => b.x === x && b.y === y);
-    
+    const existingBuilding = this.buildings.find((b) => b.x === x && b.y === y);
+
     if (!existingBuilding) {
       // Try to build a house (simplest building)
       if (this.resources.gold >= 50) {
         this.buildings.push({
-          x: x,
-          y: y,
+          x,
+          y,
           type: 'House',
           age: 0
         });
@@ -611,12 +615,12 @@ class StrategyEmpire extends BaseGame {
 
   update() {
     // Update buildings and resources
-    this.buildings.forEach(building => {
+    this.buildings.forEach((building) => {
       building.age++;
-      
+
       // Produce resources every 60 frames (1 second at 60fps)
       if (building.age % 60 === 0) {
-        const buildingType = this.buildingTypes.find(bt => bt.name === building.type);
+        const buildingType = this.buildingTypes.find((bt) => bt.name === building.type);
         if (buildingType) {
           if (buildingType.produces === 'gold') {
             this.resources.gold += buildingType.amount;
@@ -659,32 +663,26 @@ class StrategyEmpire extends BaseGame {
     // Highlight selected cell
     if (this.selectedCell) {
       this.ctx.fillStyle = 'rgba(245, 158, 11, 0.3)';
-      this.ctx.fillRect(
-        this.selectedCell.x * this.cellSize,
+      this.ctx.fillRect(this.selectedCell.x * this.cellSize,
         this.selectedCell.y * this.cellSize,
         this.cellSize,
-        this.cellSize
-      );
+        this.cellSize);
     }
 
     // Draw buildings
     this.ctx.font = '12px Arial';
     this.ctx.textAlign = 'center';
-    this.buildings.forEach(building => {
+    this.buildings.forEach((building) => {
       this.ctx.fillStyle = '#3b82f6';
-      this.ctx.fillRect(
-        building.x * this.cellSize + 5,
+      this.ctx.fillRect(building.x * this.cellSize + 5,
         building.y * this.cellSize + 5,
         this.cellSize - 10,
-        this.cellSize - 10
-      );
+        this.cellSize - 10);
 
       this.ctx.fillStyle = '#ffffff';
-      this.ctx.fillText(
-        building.type[0], // First letter of building type
+      this.ctx.fillText(building.type[0], // First letter of building type
         building.x * this.cellSize + this.cellSize / 2,
-        building.y * this.cellSize + this.cellSize / 2
-      );
+        building.y * this.cellSize + this.cellSize / 2);
     });
 
     // Draw UI
@@ -701,5 +699,7 @@ class StrategyEmpire extends BaseGame {
 
 // Export classes for use in main app
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { PuzzleGame, SpaceDefender, CoinRunner, StrategyEmpire };
+  module.exports = {
+    PuzzleGame, SpaceDefender, CoinRunner, StrategyEmpire
+  };
 }

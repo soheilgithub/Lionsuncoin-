@@ -9,6 +9,10 @@ import Footer from './components/Layout/Footer';
 import LoadingScreen from './components/UI/LoadingScreen';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 
+// Redux
+import { initializeAuth } from './store/slices/authSlice';
+import { connectSocket, disconnectSocket } from './store/slices/socketSlice';
+
 // Lazy-loaded Pages for code splitting
 const HomePage = React.lazy(() => import('./pages/HomePage'));
 const LoginPage = React.lazy(() => import('./pages/LoginPage'));
@@ -20,10 +24,6 @@ const WalletPage = React.lazy(() => import('./pages/WalletPage'));
 const LeaderboardPage = React.lazy(() => import('./pages/LeaderboardPage'));
 const ProfilePage = React.lazy(() => import('./pages/ProfilePage'));
 const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage'));
-
-// Redux
-import { initializeAuth } from './store/slices/authSlice';
-import { connectSocket, disconnectSocket } from './store/slices/socketSlice';
 
 // Optimized loading component for lazy routes
 const PageLoader = () => (

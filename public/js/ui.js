@@ -22,7 +22,7 @@ class UIManager {
     };
 
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add('animate-in');
         }
@@ -30,7 +30,7 @@ class UIManager {
     }, observerOptions);
 
     // Observe elements that should animate on scroll
-    document.querySelectorAll('.platform-card, .game-card, .leaderboard-row').forEach(el => {
+    document.querySelectorAll('.platform-card, .game-card, .leaderboard-row').forEach((el) => {
       observer.observe(el);
     });
   }
@@ -38,14 +38,14 @@ class UIManager {
   // Enhanced tooltips
   setupTooltips() {
     const tooltipElements = document.querySelectorAll('[data-tooltip]');
-    
-    tooltipElements.forEach(element => {
+
+    tooltipElements.forEach((element) => {
       let tooltip = null;
 
       element.addEventListener('mouseenter', (e) => {
         const text = element.getAttribute('data-tooltip');
         const position = element.getAttribute('data-tooltip-position') || 'top';
-        
+
         tooltip = this.createTooltip(text, position);
         document.body.appendChild(tooltip);
         this.positionTooltip(tooltip, element, position);
@@ -98,8 +98,9 @@ class UIManager {
   positionTooltip(tooltip, element, position) {
     const rect = element.getBoundingClientRect();
     const tooltipRect = tooltip.getBoundingClientRect();
-    
-    let left, top;
+
+    let left; let
+      top;
 
     switch (position) {
       case 'top':
@@ -218,7 +219,7 @@ class UIManager {
   toggleTheme() {
     const currentTheme = document.body.getAttribute('data-theme');
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    
+
     document.body.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
 
@@ -236,9 +237,7 @@ class UIManager {
       if (e.target.classList.contains('modal')) {
         // Clicked on modal backdrop
         const modal = e.target;
-        const focusableElements = modal.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
+        const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
         if (focusableElements.length > 0) {
           focusableElements[0].focus();
         }
@@ -306,10 +305,10 @@ class UIManager {
   initializeAnimations() {
     // Floating animation for coins
     this.animateFloatingCoins();
-    
+
     // Parallax effect for hero section
     this.setupParallax();
-    
+
     // Typewriter effect for hero text
     this.setupTypewriter();
   }
@@ -346,7 +345,7 @@ class UIManager {
           }
         }
       `;
-      
+
       if (!document.querySelector('#floatingCoinsStyle')) {
         style.id = 'floatingCoinsStyle';
         document.head.appendChild(style);
@@ -369,11 +368,11 @@ class UIManager {
 
   setupParallax() {
     const parallaxElements = document.querySelectorAll('.hero-particles');
-    
+
     window.addEventListener('scroll', () => {
       const scrollTop = window.pageYOffset;
-      
-      parallaxElements.forEach(element => {
+
+      parallaxElements.forEach((element) => {
         const speed = 0.5;
         element.style.transform = `translateY(${scrollTop * speed}px)`;
       });
@@ -382,12 +381,12 @@ class UIManager {
 
   setupTypewriter() {
     const typewriterElements = document.querySelectorAll('.typewriter');
-    
-    typewriterElements.forEach(element => {
+
+    typewriterElements.forEach((element) => {
       const text = element.textContent;
       element.textContent = '';
       element.style.borderRight = '2px solid var(--primary-color)';
-      
+
       let i = 0;
       const typeInterval = setInterval(() => {
         if (i < text.length) {
@@ -397,8 +396,8 @@ class UIManager {
           clearInterval(typeInterval);
           // Blinking cursor effect
           setInterval(() => {
-            element.style.borderRight = element.style.borderRight === 'none' 
-              ? '2px solid var(--primary-color)' 
+            element.style.borderRight = element.style.borderRight === 'none'
+              ? '2px solid var(--primary-color)'
               : 'none';
           }, 500);
         }
@@ -418,7 +417,7 @@ class UIManager {
       padding: 2rem;
       color: var(--primary-color);
     `;
-    
+
     element.innerHTML = '';
     element.appendChild(spinner);
   }
@@ -434,14 +433,14 @@ class UIManager {
     const range = end - start;
     const stepTime = Math.abs(Math.floor(duration / range));
     const startTime = new Date().getTime();
-    
+
     const timer = setInterval(() => {
       const now = new Date().getTime();
       const remaining = Math.max((startTime + duration) - now, 0);
       const value = Math.round(end - (remaining / duration) * range);
-      
+
       element.textContent = value.toLocaleString();
-      
+
       if (value === end) {
         clearInterval(timer);
       }
@@ -451,7 +450,7 @@ class UIManager {
   createConfetti() {
     const colors = ['#f59e0b', '#3b82f6', '#8b5cf6', '#22c55e', '#ef4444'];
     const confettiCount = 50;
-    
+
     for (let i = 0; i < confettiCount; i++) {
       const confetti = document.createElement('div');
       confetti.style.cssText = `
@@ -465,7 +464,7 @@ class UIManager {
         pointer-events: none;
         animation: confettiFall ${Math.random() * 3 + 2}s linear forwards;
       `;
-      
+
       const style = document.createElement('style');
       style.textContent = `
         @keyframes confettiFall {
@@ -475,14 +474,14 @@ class UIManager {
           }
         }
       `;
-      
+
       if (!document.querySelector('#confettiStyle')) {
         style.id = 'confettiStyle';
         document.head.appendChild(style);
       }
-      
+
       document.body.appendChild(confetti);
-      
+
       setTimeout(() => {
         confetti.remove();
       }, 5000);
@@ -493,7 +492,7 @@ class UIManager {
   transitionToPage(url) {
     document.body.style.opacity = '0';
     document.body.style.transition = 'opacity 0.3s ease';
-    
+
     setTimeout(() => {
       window.location.href = url;
     }, 300);
@@ -506,9 +505,9 @@ class UIManager {
         setTimeout(() => {
           const perfData = performance.getEntriesByType('navigation')[0];
           const loadTime = perfData.loadEventEnd - perfData.loadEventStart;
-          
+
           console.log(`Page load time: ${loadTime}ms`);
-          
+
           // Report slow loads
           if (loadTime > 3000) {
             console.warn('Slow page load detected');
@@ -522,7 +521,7 @@ class UIManager {
   setupErrorHandling() {
     window.addEventListener('error', (event) => {
       console.error('JavaScript error:', event.error);
-      
+
       // Show user-friendly error message
       if (window.app) {
         window.app.showToast('Something went wrong. Please refresh the page.', 'error');
@@ -531,10 +530,10 @@ class UIManager {
 
     window.addEventListener('unhandledrejection', (event) => {
       console.error('Unhandled promise rejection:', event.reason);
-      
+
       // Prevent default browser behavior
       event.preventDefault();
-      
+
       if (window.app) {
         window.app.showToast('Connection error. Please check your internet.', 'error');
       }
@@ -558,7 +557,7 @@ window.UIUtils = {
 
   throttle: (func, limit) => {
     let inThrottle;
-    return function() {
+    return function () {
       const args = arguments;
       const context = this;
       if (!inThrottle) {
@@ -572,7 +571,7 @@ window.UIUtils = {
   formatCurrency: (amount, currency = 'LC') => {
     if (amount >= 1000000) {
       return `${(amount / 1000000).toFixed(1)}M ${currency}`;
-    } else if (amount >= 1000) {
+    } if (amount >= 1000) {
       return `${(amount / 1000).toFixed(1)}K ${currency}`;
     }
     return `${amount.toLocaleString()} ${currency}`;
@@ -598,7 +597,7 @@ window.UIUtils = {
     canvas.width = size;
     canvas.height = size;
     const ctx = canvas.getContext('2d');
-    
+
     // Simple pattern for demo
     ctx.fillStyle = '#000';
     for (let i = 0; i < size; i += 10) {
@@ -608,7 +607,7 @@ window.UIUtils = {
         }
       }
     }
-    
+
     return canvas.toDataURL();
   }
 };

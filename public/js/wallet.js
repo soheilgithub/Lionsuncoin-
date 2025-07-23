@@ -49,7 +49,7 @@ class WalletManager {
 
       const response = await fetch('/api/wallet/balance', {
         headers: {
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         }
       });
 
@@ -86,7 +86,7 @@ class WalletManager {
 
   updateExchangeRateDisplay() {
     const exchangeElements = document.querySelectorAll('.exchange-rate');
-    exchangeElements.forEach(element => {
+    exchangeElements.forEach((element) => {
       const ethValue = (this.balance * this.exchangeRate).toFixed(6);
       element.textContent = `≈ ${ethValue} ETH`;
     });
@@ -94,9 +94,9 @@ class WalletManager {
 
   formatNumber(num) {
     if (num >= 1000000) {
-      return (num / 1000000).toFixed(1) + 'M';
-    } else if (num >= 1000) {
-      return (num / 1000).toFixed(1) + 'K';
+      return `${(num / 1000000).toFixed(1)}M`;
+    } if (num >= 1000) {
+      return `${(num / 1000).toFixed(1)}K`;
     }
     return num.toLocaleString();
   }
@@ -161,7 +161,7 @@ class WalletManager {
     // Setup form handler
     const sendForm = document.getElementById('sendForm');
     const amountInput = document.getElementById('sendAmount');
-    
+
     amountInput.addEventListener('input', () => {
       const amount = parseFloat(amountInput.value) || 0;
       const total = amount + 1; // 1 coin network fee
@@ -198,7 +198,7 @@ class WalletManager {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
           recipient,
@@ -212,7 +212,7 @@ class WalletManager {
       if (response.ok) {
         form.closest('.modal').remove();
         document.body.style.overflow = '';
-        
+
         if (window.app) {
           window.app.showToast(`Successfully sent ${amount} coins to ${recipient}!`, 'success');
           // Update balance
@@ -221,7 +221,7 @@ class WalletManager {
             window.app.updateUI();
           }
         }
-        
+
         this.loadWalletData();
       } else {
         throw new Error(data.error || 'Transaction failed');
@@ -246,7 +246,7 @@ class WalletManager {
     }
 
     const minWithdraw = 1000; // Minimum withdrawal amount
-    
+
     const modalHtml = `
       <div class="modal active" id="withdrawModal">
         <div class="modal-content">
@@ -300,7 +300,7 @@ class WalletManager {
     // Setup form handler
     const withdrawForm = document.getElementById('withdrawForm');
     const amountInput = document.getElementById('withdrawAmount');
-    
+
     amountInput.addEventListener('input', () => {
       const amount = parseFloat(amountInput.value) || 0;
       const ethAmount = (amount * this.exchangeRate).toFixed(6);
@@ -336,7 +336,7 @@ class WalletManager {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
           address,
@@ -349,12 +349,12 @@ class WalletManager {
       if (response.ok) {
         form.closest('.modal').remove();
         document.body.style.overflow = '';
-        
+
         if (window.app) {
           window.app.showToast('Withdrawal request submitted successfully!', 'success');
           window.app.showToast('Processing may take 5-10 minutes', 'info');
         }
-        
+
         this.loadWalletData();
       } else {
         throw new Error(data.error || 'Withdrawal failed');
@@ -380,10 +380,10 @@ class WalletManager {
 
     try {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      
+
       if (accounts.length > 0) {
         this.walletAddress = accounts[0];
-        
+
         // Save wallet address to backend
         const token = localStorage.getItem('authToken');
         if (token) {
@@ -391,7 +391,7 @@ class WalletManager {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
+              Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
               walletAddress: this.walletAddress
@@ -415,7 +415,7 @@ class WalletManager {
 
   updateWalletAddressDisplay() {
     const addressElements = document.querySelectorAll('.wallet-address');
-    addressElements.forEach(element => {
+    addressElements.forEach((element) => {
       if (this.walletAddress) {
         element.textContent = `${this.walletAddress.substring(0, 6)}...${this.walletAddress.substring(38)}`;
         element.style.display = 'block';
@@ -456,7 +456,7 @@ class WalletManager {
       const token = localStorage.getItem('authToken');
       const response = await fetch('/api/wallet/transactions', {
         headers: {
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         }
       });
 
@@ -494,7 +494,7 @@ class WalletManager {
       return;
     }
 
-    const transactionsHtml = transactions.map(tx => {
+    const transactionsHtml = transactions.map((tx) => {
       const isIncoming = tx.type === 'received' || tx.type === 'earned';
       const icon = this.getTransactionIcon(tx.type);
       const amountClass = isIncoming ? 'positive' : 'negative';
@@ -526,22 +526,22 @@ class WalletManager {
 
   getTransactionIcon(type) {
     const icons = {
-      'sent': 'fas fa-arrow-up',
-      'received': 'fas fa-arrow-down',
-      'earned': 'fas fa-gamepad',
-      'withdrawal': 'fas fa-external-link-alt',
-      'purchase': 'fas fa-shopping-cart'
+      sent: 'fas fa-arrow-up',
+      received: 'fas fa-arrow-down',
+      earned: 'fas fa-gamepad',
+      withdrawal: 'fas fa-external-link-alt',
+      purchase: 'fas fa-shopping-cart'
     };
     return icons[type] || 'fas fa-exchange-alt';
   }
 
   getTransactionTitle(transaction) {
     const titles = {
-      'sent': 'Sent to ' + (transaction.recipient || 'Unknown'),
-      'received': 'Received from ' + (transaction.sender || 'Unknown'),
-      'earned': 'Game Reward - ' + (transaction.gameName || 'Unknown Game'),
-      'withdrawal': 'Withdrawal to Ethereum',
-      'purchase': 'In-game Purchase'
+      sent: `Sent to ${transaction.recipient || 'Unknown'}`,
+      received: `Received from ${transaction.sender || 'Unknown'}`,
+      earned: `Game Reward - ${transaction.gameName || 'Unknown Game'}`,
+      withdrawal: 'Withdrawal to Ethereum',
+      purchase: 'In-game Purchase'
     };
     return titles[transaction.type] || 'Transaction';
   }
@@ -563,7 +563,7 @@ class WalletManager {
       const baseRate = 0.001;
       const fluctuation = (Math.random() - 0.5) * 0.0002; // ±0.0001 ETH
       this.exchangeRate = Math.max(0.0005, baseRate + fluctuation);
-      
+
       this.updateExchangeRateDisplay();
     } catch (error) {
       console.error('Exchange rate update error:', error);
@@ -578,7 +578,7 @@ class WalletManager {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({ amount, duration })
       });
@@ -589,9 +589,8 @@ class WalletManager {
           window.app.showToast(`Successfully staked ${amount} coins for ${duration} days!`, 'success');
         }
         return data;
-      } else {
-        throw new Error('Staking failed');
       }
+      throw new Error('Staking failed');
     } catch (error) {
       console.error('Staking error:', error);
       if (window.app) {
@@ -604,7 +603,7 @@ class WalletManager {
 // Initialize wallet manager
 document.addEventListener('DOMContentLoaded', () => {
   window.walletManager = new WalletManager();
-  
+
   // Update exchange rates every 5 minutes
   setInterval(() => {
     if (window.walletManager) {
