@@ -18,14 +18,14 @@ const rateLimiterMiddleware = async (req, res, next) => {
   } catch (rejRes) {
     const remainingPoints = rejRes.remainingHits || 0;
     const msBeforeNext = rejRes.msBeforeNext || 300000;
-    
+
     res.set({
       'Retry-After': Math.round(msBeforeNext / 1000) || 300,
       'X-RateLimit-Limit': 5,
       'X-RateLimit-Remaining': remainingPoints,
       'X-RateLimit-Reset': new Date(Date.now() + msBeforeNext).toISOString(),
     });
-    
+
     return res.status(429).json({
       error: 'Too many requests',
       message: 'Too many authentication attempts. Please try again later.',
@@ -36,7 +36,7 @@ const rateLimiterMiddleware = async (req, res, next) => {
 
 // JWT Authentication middleware
 const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
+  const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 
   if (!token) {
@@ -56,23 +56,22 @@ const authenticateToken = (req, res, next) => {
         error: 'Token expired',
         message: 'Your session has expired. Please log in again.'
       });
-    } else if (error.name === 'JsonWebTokenError') {
+    } if (error.name === 'JsonWebTokenError') {
       return res.status(401).json({
         error: 'Invalid token',
         message: 'Authentication token is invalid'
       });
-    } else {
-      return res.status(500).json({
-        error: 'Token verification failed',
-        message: 'An error occurred during authentication'
-      });
     }
+    return res.status(500).json({
+      error: 'Token verification failed',
+      message: 'An error occurred during authentication'
+    });
   }
 };
 
 // Optional authentication (for routes that work with or without auth)
 const optionalAuth = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
+  const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
@@ -86,7 +85,7 @@ const optionalAuth = (req, res, next) => {
   } catch (error) {
     req.user = null;
   }
-  
+
   next();
 };
 
@@ -123,12 +122,10 @@ const generateToken = (payload, options = {}) => {
     issuer: 'lionsuncoin-gaming',
     audience: 'lionsuncoin-users'
   };
-  
-  return jwt.sign(
-    payload,
+
+  return jwt.sign(payload,
     process.env.JWT_SECRET || 'lionsuncoin-secret-key',
-    { ...defaultOptions, ...options }
-  );
+    { ...defaultOptions, ...options });
 };
 
 // Verify JWT token
@@ -164,13 +161,13 @@ const gameRateLimiterMiddleware = async (req, res, next) => {
     next();
   } catch (rejRes) {
     const msBeforeNext = rejRes.msBeforeNext || 60000;
-    
+
     res.set({
       'Retry-After': Math.round(msBeforeNext / 1000) || 60,
       'X-RateLimit-Limit': 100,
       'X-RateLimit-Remaining': rejRes.remainingHits || 0,
     });
-    
+
     return res.status(429).json({
       error: 'Rate limit exceeded',
       message: 'Too many game actions. Please slow down.',
@@ -182,24 +179,24 @@ const gameRateLimiterMiddleware = async (req, res, next) => {
 // API key middleware (for external integrations)
 const authenticateApiKey = (req, res, next) => {
   const apiKey = req.headers['x-api-key'];
-  
+
   if (!apiKey) {
     return res.status(401).json({
       error: 'API key required',
       message: 'X-API-Key header is required'
     });
   }
-  
+
   // Validate API key (in production, store these securely)
   const validApiKeys = (process.env.API_KEYS || '').split(',');
-  
+
   if (!validApiKeys.includes(apiKey)) {
     return res.status(401).json({
       error: 'Invalid API key',
       message: 'The provided API key is not valid'
     });
   }
-  
+
   next();
 };
 

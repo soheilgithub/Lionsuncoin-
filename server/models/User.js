@@ -203,53 +203,53 @@ const userSchema = new mongoose.Schema({
 });
 
 // Update the updatedAt field before saving
-userSchema.pre('save', function(next) {
+userSchema.pre('save', function (next) {
   this.updatedAt = new Date();
   next();
 });
 
 // Calculate level based on experience
-userSchema.virtual('calculatedLevel').get(function() {
+userSchema.virtual('calculatedLevel').get(function () {
   return Math.floor(this.experience / 1000) + 1;
 });
 
 // Calculate experience needed for next level
-userSchema.virtual('experienceToNextLevel').get(function() {
+userSchema.virtual('experienceToNextLevel').get(function () {
   const currentLevelExp = (this.level - 1) * 1000;
   const nextLevelExp = this.level * 1000;
   return nextLevelExp - this.experience;
 });
 
 // Calculate win rate
-userSchema.virtual('winRate').get(function() {
+userSchema.virtual('winRate').get(function () {
   if (this.stats.totalGamesPlayed === 0) return 0;
   return (this.stats.totalGamesWon / this.stats.totalGamesPlayed * 100).toFixed(2);
 });
 
 // Add experience and check for level up
-userSchema.methods.addExperience = function(exp) {
+userSchema.methods.addExperience = function (exp) {
   this.experience += exp;
   const newLevel = Math.floor(this.experience / 1000) + 1;
-  
+
   if (newLevel > this.level) {
     const levelDiff = newLevel - this.level;
     this.level = newLevel;
-    
+
     // Award coins for leveling up
     this.coins += levelDiff * 100;
-    
+
     return {
       leveledUp: true,
       newLevel: this.level,
       coinsAwarded: levelDiff * 100
     };
   }
-  
+
   return { leveledUp: false };
 };
 
 // Add coins with validation
-userSchema.methods.addCoins = function(amount) {
+userSchema.methods.addCoins = function (amount) {
   if (amount > 0) {
     this.coins += amount;
     this.stats.totalCoinsEarned += amount;
@@ -258,40 +258,38 @@ userSchema.methods.addCoins = function(amount) {
 };
 
 // Spend coins with validation
-userSchema.methods.spendCoins = function(amount) {
+userSchema.methods.spendCoins = function (amount) {
   if (amount <= 0) return false;
   if (this.coins < amount) return false;
-  
+
   this.coins -= amount;
   this.stats.totalCoinsSpent += amount;
   return true;
 };
 
 // Add achievement
-userSchema.methods.addAchievement = function(achievementData) {
+userSchema.methods.addAchievement = function (achievementData) {
   // Check if achievement already exists
-  const existing = this.achievements.find(
-    ach => ach.game === achievementData.game && ach.name === achievementData.name
-  );
-  
+  const existing = this.achievements.find((ach) => ach.game === achievementData.game && ach.name === achievementData.name);
+
   if (!existing) {
     this.achievements.push(achievementData);
-    
+
     // Award coins if specified
     if (achievementData.coinsRewarded > 0) {
       this.addCoins(achievementData.coinsRewarded);
     }
-    
+
     return true;
   }
-  
+
   return false;
 };
 
 // Update game stats
-userSchema.methods.updateGameStats = function(gameType, gameData) {
-  let gameStats = this.stats.gameStats.find(gs => gs.game === gameType);
-  
+userSchema.methods.updateGameStats = function (gameType, gameData) {
+  let gameStats = this.stats.gameStats.find((gs) => gs.game === gameType);
+
   if (!gameStats) {
     gameStats = {
       game: gameType,
@@ -306,30 +304,29 @@ userSchema.methods.updateGameStats = function(gameType, gameData) {
     };
     this.stats.gameStats.push(gameStats);
   }
-  
+
   // Update stats
   gameStats.gamesPlayed += 1;
   this.stats.totalGamesPlayed += 1;
-  
+
   if (gameData.won) {
     gameStats.gamesWon += 1;
     this.stats.totalGamesWon += 1;
   }
-  
+
   if (gameData.score > gameStats.highScore) {
     gameStats.highScore = gameData.score;
   }
-  
+
   gameStats.totalScore += gameData.score || 0;
   gameStats.totalTime += gameData.playTime || 0;
   gameStats.lastPlayed = new Date();
-  
+
   this.stats.totalPlayTime += gameData.playTime || 0;
-  
+
   // Update favorite game
-  const favoriteGameStats = this.stats.gameStats.reduce((prev, current) => 
-    (prev.gamesPlayed > current.gamesPlayed) ? prev : current
-  );
+  const favoriteGameStats = this.stats.gameStats.reduce((prev, current) =>
+    ((prev.gamesPlayed > current.gamesPlayed) ? prev : current));
   this.stats.favoriteGame = favoriteGameStats.game;
 };
 

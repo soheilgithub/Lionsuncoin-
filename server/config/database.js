@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const connectDB = async () => {
   try {
     const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/lionsuncoin-gaming';
-    
+
     const options = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -44,7 +44,7 @@ const connectDB = async () => {
     return conn;
   } catch (error) {
     console.error('❌ Database connection failed:', error.message);
-    
+
     // Retry connection after 5 seconds
     setTimeout(() => {
       console.log('🔄 Retrying database connection...');
@@ -69,8 +69,8 @@ const checkDBHealth = async () => {
       state: states[state],
       host: mongoose.connection.host,
       name: mongoose.connection.name,
-      collections: mongoose.connection.db ? 
-        Object.keys(mongoose.connection.collections).length : 0
+      collections: mongoose.connection.db
+        ? Object.keys(mongoose.connection.collections).length : 0
     };
   } catch (error) {
     return {
@@ -87,9 +87,9 @@ const getDBStats = async () => {
       throw new Error('Database not connected');
     }
 
-    const db = mongoose.connection.db;
+    const { db } = mongoose.connection;
     const stats = await db.stats();
-    
+
     return {
       collections: stats.collections,
       dataSize: stats.dataSize,
@@ -107,7 +107,7 @@ const getDBStats = async () => {
 const createIndexes = async () => {
   try {
     console.log('📇 Creating database indexes...');
-    
+
     // User indexes
     await mongoose.connection.collection('users').createIndexes([
       { key: { username: 1 }, unique: true, name: 'username_unique' },

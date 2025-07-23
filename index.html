@@ -4,6 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
     
+    <!-- Resource Hints for Performance -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Critical Resource Preloads -->
+    <link rel="modulepreload" href="/src/main.tsx" />
+    <link rel="preload" href="/src/App.tsx" as="script" />
+    <link rel="preload" href="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2" as="font" type="font/woff2" crossorigin />
+    
     <!-- Primary Meta Tags -->
     <title>🦁 Lionsuncoin Gaming Platform - Cross-Platform Crypto Gaming</title>
     <meta name="title" content="Lionsuncoin Gaming Platform - Cross-Platform Crypto Gaming" />
@@ -29,7 +40,7 @@
     <meta property="twitter:image" content="/twitter-image.png" />
     <meta property="twitter:creator" content="@LionsuncoinGame" />
     
-    <!-- Favicon and Icons -->
+    <!-- Favicon and Icons (optimized loading) -->
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -68,14 +79,17 @@
     <meta name="msapplication-wide310x150logo" content="/ms-icon-310x150.png" />
     <meta name="msapplication-square310x310logo" content="/ms-icon-310x310.png" />
     
-    <!-- Fonts Preload -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <!-- Optimized Font Loading -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" /></noscript>
     
-    <!-- Critical CSS -->
+    <!-- Critical CSS (inlined and optimized) -->
     <style>
       /* Critical path CSS for faster loading */
+      * {
+        box-sizing: border-box;
+      }
+      
       body {
         margin: 0;
         padding: 0;
@@ -84,6 +98,10 @@
         color: #fff;
         min-height: 100vh;
         overflow-x: hidden;
+        font-display: swap;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
       }
       
       #root {
@@ -91,6 +109,7 @@
         position: relative;
       }
       
+      /* Optimized loading screen */
       .loading-screen {
         position: fixed;
         top: 0;
@@ -103,13 +122,20 @@
         justify-content: center;
         align-items: center;
         z-index: 9999;
-        transition: opacity 0.5s ease-out;
+        transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        will-change: opacity, visibility;
+      }
+      
+      .loading-screen.hidden {
+        opacity: 0;
+        visibility: hidden;
       }
       
       .loading-logo {
         font-size: 4rem;
         margin-bottom: 1rem;
         animation: pulse 2s infinite;
+        will-change: transform;
       }
       
       .loading-text {
@@ -126,6 +152,7 @@
         border-top: 3px solid #ffd700;
         border-radius: 50%;
         animation: spin 1s linear infinite;
+        will-change: transform;
       }
       
       @keyframes pulse {
@@ -151,6 +178,16 @@
       .platform-electron {
         user-select: none;
         -webkit-app-region: no-drag;
+      }
+      
+      /* Performance optimizations */
+      img {
+        content-visibility: auto;
+      }
+      
+      /* Reduce layout shifts */
+      .layout-shift-guard {
+        contain: layout style paint;
       }
     </style>
     
@@ -182,7 +219,7 @@
   </head>
   <body>
     <div id="root">
-      <!-- Loading screen -->
+      <!-- Optimized loading screen with faster removal -->
       <div class="loading-screen" id="loading-screen">
         <div class="loading-logo">🦁</div>
         <div class="loading-text">Lionsuncoin Gaming</div>
@@ -190,16 +227,31 @@
       </div>
     </div>
     
-    <!-- Remove loading screen once app loads -->
+    <!-- Optimized loading screen removal -->
     <script>
+      // Remove loading screen when DOM content is loaded
+      document.addEventListener('DOMContentLoaded', () => {
+        const loadingScreen = document.getElementById('loading-screen');
+        if (loadingScreen) {
+          // Use requestAnimationFrame for smoother transition
+          requestAnimationFrame(() => {
+            loadingScreen.classList.add('hidden');
+            // Remove from DOM after transition
+            setTimeout(() => {
+              if (loadingScreen.parentNode) {
+                loadingScreen.remove();
+              }
+            }, 500);
+          });
+        }
+      });
+      
+      // Fallback removal after app loads
       window.addEventListener('load', () => {
         setTimeout(() => {
           const loadingScreen = document.getElementById('loading-screen');
-          if (loadingScreen) {
-            loadingScreen.style.opacity = '0';
-            setTimeout(() => {
-              loadingScreen.remove();
-            }, 500);
+          if (loadingScreen && loadingScreen.parentNode) {
+            loadingScreen.remove();
           }
         }, 1000);
       });

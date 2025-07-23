@@ -1,23 +1,29 @@
 {
-  "extends": "airbnb-base",
+  "extends": "eslint:recommended",
   "env": {
     "node": true,
-    "mocha": true,
+    "browser": true,
     "es6": true
   },
-  "plugins": ["chai-friendly"],
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
   "rules": {
-    "comma-dangle": 0,
-    "consistent-return": 0,
-    "function-paren-newline": ["error", "never"],
-    "implicit-arrow-linebreak": ["off"],
-    "no-param-reassign": 0,
-    "no-underscore-dangle": 0,
-    "no-shadow": 0,
-    "no-console": 0,
-    "no-plusplus": 0,
-    "no-unused-expressions": 0,
+    "no-console": "off",
     "no-unused-vars": ["error", { "argsIgnorePattern": "next" }],
-    "chai-friendly/no-unused-expressions": 2
+    "max-len": ["warn", { "code": 120 }],
+    "class-methods-use-this": "off",
+    "no-undef": "error",
+    "prefer-const": "warn"
+  },
+  "globals": {
+    "document": "readonly",
+    "window": "readonly",
+    "localStorage": "readonly",
+    "navigator": "readonly",
+    "IntersectionObserver": "readonly",
+    "requestAnimationFrame": "readonly",
+    "io": "readonly"
   }
 }

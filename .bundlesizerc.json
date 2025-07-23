@@ -1,0 +1,34 @@
+{
+  "files": [
+    {
+      "path": "dist/client/js/*.js",
+      "maxSize": "250 kB",
+      "compression": "gzip"
+    },
+    {
+      "path": "dist/client/css/*.css",
+      "maxSize": "50 kB",
+      "compression": "gzip"
+    },
+    {
+      "path": "dist/client/js/react-vendor-*.js",
+      "maxSize": "150 kB",
+      "compression": "gzip"
+    },
+    {
+      "path": "dist/client/js/game-3d-*.js",
+      "maxSize": "500 kB",
+      "compression": "gzip"
+    },
+    {
+      "path": "dist/client/js/game-2d-*.js",
+      "maxSize": "300 kB",
+      "compression": "gzip"
+    },
+    {
+      "path": "dist/client/js/ui-core-*.js",
+      "maxSize": "200 kB",
+      "compression": "gzip"
+    }
+  ]
+}

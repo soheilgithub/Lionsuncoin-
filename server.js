@@ -15,8 +15,8 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
+    origin: '*',
+    methods: ['GET', 'POST']
   }
 });
 
@@ -25,11 +25,11 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
-      imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "wss:", "ws:"],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://cdnjs.cloudflare.com'],
+      fontSrc: ["'self'", 'https://fonts.gstatic.com', 'https://cdnjs.cloudflare.com'],
+      scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com'],
+      imgSrc: ["'self'", 'data:', 'https:'],
+      connectSrc: ["'self'", 'wss:', 'ws:'],
     },
   },
 }));
@@ -103,7 +103,7 @@ const GameSession = mongoose.model('GameSession', gameSessionSchema);
 
 // JWT middleware
 const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
+  const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
@@ -120,8 +120,10 @@ const authenticateToken = (req, res, next) => {
 // API Routes
 app.post('/api/register', async (req, res) => {
   try {
-    const { username, email, password, platform = 'web' } = req.body;
-    
+    const {
+      username, email, password, platform = 'web'
+    } = req.body;
+
     // Check if user exists
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
@@ -130,7 +132,7 @@ app.post('/api/register', async (req, res) => {
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 12);
-    
+
     // Create user
     const user = new User({
       username,
@@ -142,11 +144,9 @@ app.post('/api/register', async (req, res) => {
     await user.save();
 
     // Generate token
-    const token = jwt.sign(
-      { userId: user._id, username: user.username },
+    const token = jwt.sign({ userId: user._id, username: user.username },
       process.env.JWT_SECRET || 'lionsuncoin-secret',
-      { expiresIn: '24h' }
-    );
+      { expiresIn: '24h' });
 
     res.status(201).json({
       message: 'User created successfully',
@@ -169,7 +169,7 @@ app.post('/api/register', async (req, res) => {
 app.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    
+
     // Find user
     const user = await User.findOne({ email });
     if (!user) {
@@ -183,11 +183,9 @@ app.post('/api/login', async (req, res) => {
     }
 
     // Generate token
-    const token = jwt.sign(
-      { userId: user._id, username: user.username },
+    const token = jwt.sign({ userId: user._id, username: user.username },
       process.env.JWT_SECRET || 'lionsuncoin-secret',
-      { expiresIn: '24h' }
-    );
+      { expiresIn: '24h' });
 
     res.json({
       message: 'Login successful',
@@ -226,7 +224,7 @@ app.get('/api/profile', authenticateToken, async (req, res) => {
 app.post('/api/game/start', authenticateToken, async (req, res) => {
   try {
     const { gameType, platform } = req.body;
-    
+
     const gameSession = new GameSession({
       userId: req.user.userId,
       gameType,
@@ -250,7 +248,7 @@ app.post('/api/game/start', authenticateToken, async (req, res) => {
 app.post('/api/game/complete', authenticateToken, async (req, res) => {
   try {
     const { sessionId, score, duration } = req.body;
-    
+
     const gameSession = await GameSession.findById(sessionId);
     if (!gameSession || gameSession.userId.toString() !== req.user.userId) {
       return res.status(404).json({ error: 'Game session not found' });
@@ -272,7 +270,7 @@ app.post('/api/game/complete', authenticateToken, async (req, res) => {
     user.lionsunCoins += coinsEarned;
     user.experience += experienceGained;
     user.gamesPlayed += 1;
-    
+
     // Level up logic
     const newLevel = Math.floor(user.experience / 1000) + 1;
     if (newLevel > user.level) {
@@ -394,8 +392,8 @@ const PORT = process.env.PORT || 3000;
 connectDB().then(() => {
   server.listen(PORT, () => {
     console.log(`🚀 Lionsuncoin Gaming Platform running on port ${PORT}`);
-    console.log(`🎮 Multi-platform gaming server ready!`);
-    console.log(`💰 Cryptocurrency integration active`);
+    console.log('🎮 Multi-platform gaming server ready!');
+    console.log('💰 Cryptocurrency integration active');
   });
 });
 
