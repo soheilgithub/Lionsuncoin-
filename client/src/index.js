@@ -10,7 +10,26 @@ import App from './App';
 import { store } from './store/store';
 import './index.css';
 
-// Create custom theme for Lionsuncoin
+// Performance monitoring (only in development or defer in production)
+const initPerformanceMonitoring = async () => {
+  if (process.env.NODE_ENV === 'development') {
+    try {
+      const { getCLS, getFID, getFCP, getLCP, getTTFB } = await import('web-vitals');
+      getCLS(console.log);
+      getFID(console.log);
+      getFCP(console.log);
+      getLCP(console.log);
+      getTTFB(console.log);
+    } catch (error) {
+      console.warn('Failed to load web-vitals:', error);
+    }
+  }
+};
+
+// Defer performance monitoring to not block initial render
+setTimeout(initPerformanceMonitoring, 2000);
+
+// Create custom theme for Lionsuncoin (optimized)
 const theme = createTheme({
   palette: {
     mode: 'dark',
@@ -49,59 +68,60 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: [
+      'Inter', // Use Inter for better performance
       'Rajdhani',
       'Orbitron',
       'Arial',
       'sans-serif',
     ].join(','),
     h1: {
-      fontFamily: 'Orbitron',
-      fontWeight: 900,
+      fontFamily: 'Inter',
+      fontWeight: 700,
       fontSize: '3rem',
       color: '#DAA520',
     },
     h2: {
-      fontFamily: 'Orbitron',
-      fontWeight: 700,
+      fontFamily: 'Inter',
+      fontWeight: 600,
       fontSize: '2.5rem',
       color: '#DAA520',
     },
     h3: {
-      fontFamily: 'Orbitron',
-      fontWeight: 700,
+      fontFamily: 'Inter',
+      fontWeight: 600,
       fontSize: '2rem',
       color: '#FFFFFF',
     },
     h4: {
-      fontFamily: 'Rajdhani',
-      fontWeight: 600,
+      fontFamily: 'Inter',
+      fontWeight: 500,
       fontSize: '1.5rem',
       color: '#FFFFFF',
     },
     h5: {
-      fontFamily: 'Rajdhani',
-      fontWeight: 600,
+      fontFamily: 'Inter',
+      fontWeight: 500,
       fontSize: '1.25rem',
       color: '#FFFFFF',
     },
     h6: {
-      fontFamily: 'Rajdhani',
-      fontWeight: 500,
+      fontFamily: 'Inter',
+      fontWeight: 400,
       fontSize: '1rem',
       color: '#FFFFFF',
     },
     body1: {
-      fontFamily: 'Rajdhani',
+      fontFamily: 'Inter',
       fontSize: '1rem',
       fontWeight: 400,
     },
     body2: {
-      fontFamily: 'Rajdhani',
+      fontFamily: 'Inter',
       fontSize: '0.875rem',
       fontWeight: 400,
     },
     button: {
-      fontFamily: 'Rajdhani',
+      fontFamily: 'Inter',
       fontWeight: 600,
       textTransform: 'uppercase',
       letterSpacing: '0.1rem',
@@ -176,42 +196,150 @@ const theme = createTheme({
   },
 });
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+// Error boundary
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
 
-root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <App />
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              duration: 4000,
-              style: {
-                background: '#1a1a3a',
-                color: '#ffffff',
-                border: '1px solid #DAA520',
-                borderRadius: '8px',
-                fontFamily: 'Rajdhani',
-              },
-              success: {
-                iconTheme: {
-                  primary: '#4CAF50',
-                  secondary: '#ffffff',
-                },
-              },
-              error: {
-                iconTheme: {
-                  primary: '#F44336',
-                  secondary: '#ffffff',
-                },
-              },
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // Only log in development
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error boundary caught error:', error, errorInfo);
+    }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{
+          padding: '2rem',
+          textAlign: 'center',
+          backgroundColor: '#1a1a2e',
+          color: '#fff',
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
+          <h1>🦁 Oops! Something went wrong</h1>
+          <p>We're sorry, but something unexpected happened.</p>
+          <button 
+            onClick={() => window.location.reload()}
+            style={{
+              padding: '1rem 2rem',
+              backgroundColor: '#ffd700',
+              color: '#1a1a2e',
+              border: 'none',
+              borderRadius: '0.5rem',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              marginTop: '1rem'
             }}
-          />
-        </ThemeProvider>
-      </BrowserRouter>
-    </Provider>
-  </React.StrictMode>
-);
+          >
+            Reload Page
+          </button>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+// Initialize application with performance optimizations
+const init = async () => {
+  // Get the root element
+  const rootElement = document.getElementById('root');
+  if (!rootElement) {
+    throw new Error('Root element not found');
+  }
+  
+  // Create React root
+  const root = ReactDOM.createRoot(rootElement);
+  
+  // Render the app immediately
+  root.render(
+    <React.StrictMode>
+      <ErrorBoundary>
+        <Provider store={store}>
+          <BrowserRouter>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <App />
+              <Toaster
+                position="top-right"
+                toastOptions={{
+                  duration: 4000,
+                  style: {
+                    background: '#1a1a3a',
+                    color: '#ffffff',
+                    border: '1px solid #DAA520',
+                    borderRadius: '8px',
+                    fontFamily: 'Inter',
+                  },
+                  success: {
+                    iconTheme: {
+                      primary: '#4CAF50',
+                      secondary: '#ffffff',
+                    },
+                  },
+                  error: {
+                    iconTheme: {
+                      primary: '#F44336',
+                      secondary: '#ffffff',
+                    },
+                  },
+                }}
+              />
+            </ThemeProvider>
+          </BrowserRouter>
+        </Provider>
+      </ErrorBoundary>
+    </React.StrictMode>
+  );
+};
+
+// Start the application with error handling
+init().catch(error => {
+  console.error('Failed to initialize application:', error);
+  
+  // Fallback render for initialization failures
+  const rootElement = document.getElementById('root');
+  if (rootElement) {
+    rootElement.innerHTML = `
+      <div style="
+        padding: 2rem; 
+        text-align: center; 
+        background: #1a1a2e; 
+        color: #fff; 
+        min-height: 100vh; 
+        display: flex; 
+        flex-direction: column; 
+        justify-content: center; 
+        align-items: center;
+      ">
+        <h1>🦁 Failed to Load</h1>
+        <p>Please refresh the page to try again.</p>
+        <button onclick="window.location.reload()" style="
+          padding: 1rem 2rem; 
+          background: #ffd700; 
+          color: #1a1a2e; 
+          border: none; 
+          border-radius: 0.5rem; 
+          cursor: pointer; 
+          font-weight: bold; 
+          margin-top: 1rem;
+        ">
+          Reload Page
+        </button>
+      </div>
+    `;
+  }
+});

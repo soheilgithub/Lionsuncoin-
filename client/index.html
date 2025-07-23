@@ -11,8 +11,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     
     <!-- Critical Resource Preloads -->
-    <link rel="modulepreload" href="/src/main.tsx" />
-    <link rel="preload" href="/src/App.tsx" as="script" />
+    <link rel="modulepreload" href="/src/index.js" />
+    <link rel="preload" href="/src/App.js" as="script" />
     <link rel="preload" href="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2" as="font" type="font/woff2" crossorigin />
     
     <!-- Primary Meta Tags -->
@@ -61,23 +61,6 @@
     <meta name="full-screen" content="yes" />
     <meta name="x5-fullscreen" content="true" />
     <meta name="360-fullscreen" content="true" />
-    
-    <!-- iOS Specific -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-touch-fullscreen" content="yes" />
-    
-    <!-- Android Specific -->
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffd700" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1a2e" />
-    
-    <!-- Windows/Xbox -->
-    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
-    <meta name="msapplication-square70x70logo" content="/ms-icon-70x70.png" />
-    <meta name="msapplication-square150x150logo" content="/ms-icon-150x150.png" />
-    <meta name="msapplication-wide310x150logo" content="/ms-icon-310x150.png" />
-    <meta name="msapplication-square310x310logo" content="/ms-icon-310x310.png" />
     
     <!-- Optimized Font Loading -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
@@ -165,21 +148,6 @@
         100% { transform: rotate(360deg); }
       }
       
-      /* Platform-specific adjustments */
-      .platform-ios body {
-        padding-top: env(safe-area-inset-top);
-        padding-bottom: env(safe-area-inset-bottom);
-      }
-      
-      .platform-android {
-        overscroll-behavior: contain;
-      }
-      
-      .platform-electron {
-        user-select: none;
-        -webkit-app-region: no-drag;
-      }
-      
       /* Performance optimizations */
       img {
         content-visibility: auto;
@@ -190,32 +158,6 @@
         contain: layout style paint;
       }
     </style>
-    
-    <!-- Structured Data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "Lionsuncoin Gaming Platform",
-      "description": "Revolutionary cross-platform gaming ecosystem powered by cryptocurrency rewards",
-      "applicationCategory": "GameApplication",
-      "operatingSystem": ["Web", "iOS", "Android", "Windows", "macOS", "Linux"],
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.8",
-        "ratingCount": "1250"
-      },
-      "author": {
-        "@type": "Organization",
-        "name": "Lionsuncoin Gaming Team"
-      }
-    }
-    </script>
   </head>
   <body>
     <div id="root">
@@ -257,6 +199,6 @@
       });
     </script>
     
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/index.js"></script>
   </body>
 </html>

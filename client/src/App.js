@@ -1,29 +1,43 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Container, Box } from '@mui/material';
 
-// Components
+// Components (keep essential components eagerly loaded)
 import Navbar from './components/Layout/Navbar';
 import Footer from './components/Layout/Footer';
 import LoadingScreen from './components/UI/LoadingScreen';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 
-// Pages
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import DashboardPage from './pages/DashboardPage';
-import GamesPage from './pages/GamesPage';
-import GamePage from './pages/GamePage';
-import WalletPage from './pages/WalletPage';
-import LeaderboardPage from './pages/LeaderboardPage';
-import ProfilePage from './pages/ProfilePage';
-import NotFoundPage from './pages/NotFoundPage';
+// Lazy-loaded Pages for code splitting
+const HomePage = React.lazy(() => import('./pages/HomePage'));
+const LoginPage = React.lazy(() => import('./pages/LoginPage'));
+const RegisterPage = React.lazy(() => import('./pages/RegisterPage'));
+const DashboardPage = React.lazy(() => import('./pages/DashboardPage'));
+const GamesPage = React.lazy(() => import('./pages/GamesPage'));
+const GamePage = React.lazy(() => import('./pages/GamePage'));
+const WalletPage = React.lazy(() => import('./pages/WalletPage'));
+const LeaderboardPage = React.lazy(() => import('./pages/LeaderboardPage'));
+const ProfilePage = React.lazy(() => import('./pages/ProfilePage'));
+const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage'));
 
 // Redux
 import { initializeAuth } from './store/slices/authSlice';
 import { connectSocket, disconnectSocket } from './store/slices/socketSlice';
+
+// Optimized loading component for lazy routes
+const PageLoader = () => (
+  <Box
+    sx={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '60vh',
+    }}
+  >
+    <LoadingScreen />
+  </Box>
+);
 
 function App() {
   const dispatch = useDispatch();
@@ -75,74 +89,76 @@ function App() {
           px: { xs: 2, sm: 3, md: 4 },
         }}
       >
-        <Routes>
-          {/* Public Routes */}
-          <Route 
-            path="/" 
-            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <HomePage />} 
-          />
-          <Route 
-            path="/login" 
-            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />} 
-          />
-          <Route 
-            path="/register" 
-            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />} 
-          />
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            {/* Public Routes */}
+            <Route 
+              path="/" 
+              element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <HomePage />} 
+            />
+            <Route 
+              path="/login" 
+              element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />} 
+            />
+            <Route 
+              path="/register" 
+              element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />} 
+            />
 
-          {/* Protected Routes */}
-          <Route 
-            path="/dashboard" 
-            element={
-              <ProtectedRoute>
-                <DashboardPage />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/games" 
-            element={
-              <ProtectedRoute>
-                <GamesPage />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/games/:gameId" 
-            element={
-              <ProtectedRoute>
-                <GamePage />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/wallet" 
-            element={
-              <ProtectedRoute>
-                <WalletPage />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/leaderboard" 
-            element={
-              <ProtectedRoute>
-                <LeaderboardPage />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/profile" 
-            element={
-              <ProtectedRoute>
-                <ProfilePage />
-              </ProtectedRoute>
-            } 
-          />
+            {/* Protected Routes */}
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <DashboardPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/games" 
+              element={
+                <ProtectedRoute>
+                  <GamesPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/games/:gameId" 
+              element={
+                <ProtectedRoute>
+                  <GamePage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/wallet" 
+              element={
+                <ProtectedRoute>
+                  <WalletPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/leaderboard" 
+              element={
+                <ProtectedRoute>
+                  <LeaderboardPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/profile" 
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              } 
+            />
 
-          {/* 404 Route */}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+            {/* 404 Route */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
       </Container>
 
       <Footer />
