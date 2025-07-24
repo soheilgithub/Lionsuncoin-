@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦁 Lionsun AI Level Generator - Live Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            padding: 3rem 0;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(45deg, #ffd700, #ffed4e, #ff6b35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: brightness(1); }
+            to { filter: brightness(1.2); }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a0a0a0;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 1.2rem;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            font-size: 0.9rem;
+            transition: transform 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        .demo-container {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 2px solid #ffd700;
+        }
+
+        .ai-section {
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .player-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .skill-bar {
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+            height: 8px;
+        }
+
+        .skill-progress {
+            background: linear-gradient(90deg, #4CAF50, #FFC107);
+            height: 100%;
+            width: 65%;
+            transition: width 0.5s ease;
+            animation: pulse-bar 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-bar {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .emotion-detector {
+            background: rgba(74, 144, 226, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 1px solid rgba(74, 144, 226, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .emotion-detector::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(74, 144, 226, 0.3), transparent);
+            animation: scan 3s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .emotion-status {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .generate-btn {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #1a1a2e;
+            border: none;
+            border-radius: 25px;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .generate-btn.loading {
+            animation: loading-btn 1.5s linear infinite;
+        }
+
+        @keyframes loading-btn {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .level-card {
+            background: linear-gradient(135deg, #2a2a4e 0%, #1e1e3f 100%);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 1px solid #4a4a6a;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .level-card:hover {
+            border-color: #ffd700;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .level-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .level-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .difficulty-badge {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .level-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .detail-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1rem;
+        }
+
+        .detail-section h4 {
+            color: #ffd700;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .detail-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .detail-section li {
+            color: #e0e0e0;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .detail-section li::before {
+            content: "→ ";
+            color: #ffd700;
+            position: absolute;
+            left: 0;
+        }
+
+        .ai-insights {
+            background: linear-gradient(135deg, #4a90e2 0%, #7b68ee 100%);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .ai-tag {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin: 0.2rem;
+            display: inline-block;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .control-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn.active {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .control-btn.inactive {
+            background: #666;
+            color: white;
+        }
+
+        .control-btn.stop {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+
+        .stat.green {
+            background: linear-gradient(45deg, #00ff00, #00cc00);
+            color: #000;
+        }
+
+        .stat.orange {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            color: #fff;
+        }
+
+        .stat.blue {
+            background: linear-gradient(45deg, #4a90e2, #7b68ee);
+            color: #fff;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            display: block;
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, #2a2a4e 0%, #1e1e3f 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 3rem;
+            border: 1px solid #4a4a6a;
+        }
+
+        .instructions h3 {
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+
+        .instructions li {
+            margin: 0.5rem 0;
+            color: #e0e0e0;
+        }
+
+        .highlight {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #00ff00;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .level-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .stats {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🦁 Lionsun: AI-Powered Level Generation</h1>
+            <p class="subtitle">
+                انقلاب در دنیای گیمینگ - مراحل هوشمند و شخصی‌سازی‌شده توسط AI<br/>
+                هر بازیکن تجربه‌ای منحصر به فرد خواهد داشت!
+            </p>
+            
+            <div class="features">
+                <div class="feature">🤖 AI Level Generation</div>
+                <div class="feature">😊 Real-time Emotion Detection</div>
+                <div class="feature">🎯 Adaptive Difficulty</div>
+                <div class="feature">🔒 Privacy-First Design</div>
+                <div class="feature">⚡ Instant Adaptation</div>
+            </div>
+        </div>
+
+        <!-- Real-time Demo Stats -->
+        <div class="stats">
+            <div class="stat green">
+                <span class="stat-number" id="levelsGenerated">0</span>
+                <div>Levels Generated</div>
+            </div>
+            <div class="stat orange">
+                <span class="stat-number" id="emotionsDetected">0</span>
+                <div>Emotions Detected</div>
+            </div>
+            <div class="stat blue">
+                <span class="stat-number" id="adaptationsExecuted">0</span>
+                <div>AI Adaptations</div>
+            </div>
+        </div>
+
+        <div class="demo-container">
+            <div class="ai-section">
+                <h3>🧠 Player AI Profile Analysis</h3>
+                
+                <!-- Real-time Emotion Detection -->
+                <div class="emotion-detector" id="emotionDetector" style="display: none;">
+                    <h4 style="color: #4a90e2; margin-bottom: 0.5rem;">
+                        🤖 Real-time AI Emotion Detection
+                    </h4>
+                    <div class="emotion-status">
+                        <div>
+                            <strong>Detected Emotion:</strong> <span id="currentEmotion">focused</span>
+                            <span style="color: #4a90e2;">(<span id="emotionConfidence">85</span>% confidence)</span>
+                        </div>
+                        <div>
+                            <strong>Sources:</strong>
+                            <span style="color: #00ff00;">🎮 Gameplay</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="player-grid">
+                    <div>
+                        <strong>Skill Level:</strong> <span id="skillLevel">65</span>%
+                        <div class="skill-bar">
+                            <div class="skill-progress" id="skillProgress"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <strong>Emotional State:</strong>
+                        <select id="emotionalState" style="
+                            background: #2a2a4e; 
+                            color: #fff; 
+                            border: 1px solid #4a4a6a; 
+                            border-radius: 5px; 
+                            padding: 0.5rem;
+                            width: 100%;
+                            margin-top: 0.5rem;
+                        ">
+                            <option value="excited">😄 Excited</option>
+                            <option value="frustrated">😤 Frustrated</option>
+                            <option value="focused" selected>🎯 Focused</option>
+                            <option value="bored">😴 Bored</option>
+                            <option value="challenged">💪 Challenged</option>
+                        </select>
+                        <div id="aiDetectionNote" style="display: none; font-size: 0.8rem; color: #4a90e2; margin-top: 0.3rem;">
+                            🤖 Auto-detected by AI
+                        </div>
+                    </div>
+                    <div>
+                        <strong>Completed Levels:</strong> <span id="completedLevels">12</span><br/>
+                        <strong>Consecutive Wins:</strong> <span id="consecutiveWins">3</span>
+                    </div>
+                    <div>
+                        <strong>Items Collected:</strong> <span id="itemsCollected">89</span><br/>
+                        <strong>Play Time:</strong> <span id="playTime">20h 50m</span>
+                    </div>
+                </div>
+                
+                <!-- Emotion Detection Controls -->
+                <div class="controls">
+                    <button class="control-btn inactive" id="enableDetection">
+                        ⭕ Enable AI Detection
+                    </button>
+                    <button class="control-btn stop" id="stopDetection">
+                        🛑 Stop Detection
+                    </button>
+                    <div style="color: #a0a0a0; font-size: 0.9rem;" id="privacyNote">
+                        🔒 Click to enable emotion-based level generation
+                    </div>
+                </div>
+            </div>
+
+            <button class="generate-btn" id="generateBtn">
+                🎮 Generate New AI Level
+            </button>
+
+            <div id="generatingStatus" style="display: none;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                    <div class="status-indicator"></div>
+                    <span>AI در حال تحلیل profile شما و ساخت مرحله شخصی‌سازی‌شده...</span>
+                </div>
+            </div>
+
+            <div id="levelResult" style="display: none;">
+                <!-- Generated level will be displayed here -->
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 How to Use the Demo</h3>
+            <ul>
+                <li>روی دکمه <span class="highlight">"Enable AI Detection"</span> کلیک کنید</li>
+                <li>با ماوس حرکت کنید و کلیک کنید تا الگوهای رفتاری تحلیل شوند</li>
+                <li>حالت عاطفی خود را تغییر دهید یا بگذارید AI خودکار تشخیص دهد</li>
+                <li>روی <span class="highlight">"Generate New AI Level"</span> کلیک کنید</li>
+                <li>مرحله شخصی‌سازی‌شده خود را مشاهده کنید!</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Demo State
+        let emotionDetectionActive = false;
+        let stats = {
+            levelsGenerated: 0,
+            emotionsDetected: 0,
+            adaptationsExecuted: 0
+        };
+        
+        // Emotion tracking
+        let gameplayMetrics = {
+            mouseClicks: 0,
+            mouseMovements: 0,
+            lastClickTime: Date.now(),
+            sessionStart: Date.now()
+        };
+
+        let emotions = ['excited', 'frustrated', 'focused', 'bored', 'challenged'];
+        let currentEmotionIndex = 2; // Start with 'focused'
+
+        // Initialize demo stats animation
+        function updateStats() {
+            document.getElementById('levelsGenerated').textContent = stats.levelsGenerated;
+            document.getElementById('emotionsDetected').textContent = stats.emotionsDetected;
+            document.getElementById('adaptationsExecuted').textContent = stats.adaptationsExecuted;
+        }
+
+        // Simulate real-time stats
+        setInterval(() => {
+            if (emotionDetectionActive) {
+                stats.emotionsDetected += Math.floor(Math.random() * 3);
+                stats.adaptationsExecuted += Math.floor(Math.random() * 2);
+                updateStats();
+            }
+        }, 3000);
+
+        // Mouse tracking for emotion detection
+        document.addEventListener('mousemove', () => {
+            if (emotionDetectionActive) {
+                gameplayMetrics.mouseMovements++;
+                
+                // Simulate emotion changes based on mouse activity
+                if (gameplayMetrics.mouseMovements % 50 === 0) {
+                    simulateEmotionDetection();
+                }
+            }
+        });
+
+        document.addEventListener('click', () => {
+            if (emotionDetectionActive) {
+                gameplayMetrics.mouseClicks++;
+                const now = Date.now();
+                const timeSinceLastClick = now - gameplayMetrics.lastClickTime;
+                
+                // Rapid clicking suggests excitement or frustration
+                if (timeSinceLastClick < 200) {
+                    currentEmotionIndex = Math.random() > 0.5 ? 0 : 1; // excited or frustrated
+                    simulateEmotionDetection();
+                }
+                
+                gameplayMetrics.lastClickTime = now;
+            }
+        });
+
+        function simulateEmotionDetection() {
+            if (!emotionDetectionActive) return;
+            
+            // Randomly change emotion with some logic
+            if (Math.random() > 0.7) {
+                currentEmotionIndex = Math.floor(Math.random() * emotions.length);
+            }
+            
+            const emotion = emotions[currentEmotionIndex];
+            const confidence = 75 + Math.floor(Math.random() * 20);
+            
+            document.getElementById('currentEmotion').textContent = emotion;
+            document.getElementById('emotionConfidence').textContent = confidence;
+            document.getElementById('emotionalState').value = emotion;
+            
+            stats.emotionsDetected++;
+        }
+
+        // Enable emotion detection
+        document.getElementById('enableDetection').addEventListener('click', function() {
+            emotionDetectionActive = true;
+            
+            this.textContent = '🟢 AI Detection Active';
+            this.classList.remove('inactive');
+            this.classList.add('active');
+            
+            document.getElementById('emotionDetector').style.display = 'block';
+            document.getElementById('aiDetectionNote').style.display = 'block';
+            document.getElementById('emotionalState').disabled = true;
+            document.getElementById('privacyNote').textContent = '🔒 Privacy Mode: Only gameplay patterns analyzed';
+            
+            // Start emotion detection simulation
+            simulateEmotionDetection();
+            setInterval(() => {
+                if (emotionDetectionActive) {
+                    simulateEmotionDetection();
+                }
+            }, 5000);
+        });
+
+        // Stop emotion detection
+        document.getElementById('stopDetection').addEventListener('click', function() {
+            emotionDetectionActive = false;
+            
+            document.getElementById('enableDetection').textContent = '⭕ Enable AI Detection';
+            document.getElementById('enableDetection').classList.remove('active');
+            document.getElementById('enableDetection').classList.add('inactive');
+            
+            document.getElementById('emotionDetector').style.display = 'none';
+            document.getElementById('aiDetectionNote').style.display = 'none';
+            document.getElementById('emotionalState').disabled = false;
+            document.getElementById('privacyNote').textContent = '🔒 Click to enable emotion-based level generation';
+        });
+
+        // Generate AI Level
+        document.getElementById('generateBtn').addEventListener('click', async function() {
+            const btn = this;
+            btn.disabled = true;
+            btn.classList.add('loading');
+            btn.textContent = '🤖 AI در حال ساخت مرحله...';
+            
+            document.getElementById('generatingStatus').style.display = 'block';
+            document.getElementById('levelResult').style.display = 'none';
+            
+            // Simulate AI processing
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Generate level based on current state
+            const level = generateAILevel();
+            displayGeneratedLevel(level);
+            
+            stats.levelsGenerated++;
+            stats.adaptationsExecuted += 2;
+            updateStats();
+            
+            // Reset button
+            btn.disabled = false;
+            btn.classList.remove('loading');
+            btn.textContent = '🎮 Generate New AI Level';
+            document.getElementById('generatingStatus').style.display = 'none';
+        });
+
+        function generateAILevel() {
+            const emotionalState = document.getElementById('emotionalState').value;
+            const skillLevel = parseInt(document.getElementById('skillLevel').textContent);
+            
+            // AI Decision Making
+            let difficulty = skillLevel / 100;
+            
+            // Adjust based on emotion
+            switch(emotionalState) {
+                case 'frustrated':
+                    difficulty -= 0.2;
+                    break;
+                case 'bored':
+                    difficulty += 0.3;
+                    break;
+                case 'excited':
+                    difficulty += 0.1;
+                    break;
+                case 'challenged':
+                    difficulty += 0.15;
+                    break;
+            }
+            
+            difficulty = Math.max(0.1, Math.min(1.0, difficulty));
+            
+            // Environment selection
+            const environments = {
+                excited: 'cosmic',
+                frustrated: 'urban',
+                focused: 'cave',
+                bored: 'forest',
+                challenged: 'mountain'
+            };
+            
+            const environment = environments[emotionalState] || 'forest';
+            
+            // Generate level name
+            const prefixes = {
+                forest: ['Enchanted', 'Mystic', 'Ancient', 'Whispering', 'Emerald'],
+                cave: ['Crystal', 'Shadow', 'Echo', 'Glowing', 'Hidden'],
+                mountain: ['Frozen', 'Majestic', 'Cloud-Piercing', 'Thunder', 'Sacred'],
+                cosmic: ['Stellar', 'Nebula', 'Void', 'Galactic', 'Quantum'],
+                urban: ['Neon', 'Metro', 'Cyber', 'Steel', 'Electric']
+            };
+            
+            const suffixes = {
+                forest: ['Grove', 'Sanctuary', 'Depths', 'Canopy', 'Clearing'],
+                cave: ['Caverns', 'Tunnels', 'Chamber', 'Depths', 'Passage'],
+                mountain: ['Peak', 'Summit', 'Ridge', 'Cliffs', 'Pass'],
+                cosmic: ['Station', 'Cluster', 'Gateway', 'Expanse', 'Nexus'],
+                urban: ['District', 'Complex', 'Tower', 'Plaza', 'Junction']
+            };
+            
+            const prefix = prefixes[environment][Math.floor(Math.random() * 5)];
+            const suffix = suffixes[environment][Math.floor(Math.random() * 5)];
+            
+            return {
+                name: `${prefix} ${suffix}`,
+                difficulty: Math.round(difficulty * 100),
+                environment: environment,
+                weather: getWeatherForEmotion(emotionalState),
+                enemies: generateEnemies(difficulty, environment),
+                obstacles: generateObstacles(difficulty),
+                rewards: generateRewards(difficulty),
+                music: getMusicForEnvironment(environment),
+                specialFeatures: getSpecialFeatures(skillLevel),
+                aiPersonalization: {
+                    adaptedFor: `${emotionalState} player with ${skillLevel}% skill`,
+                    confidenceScore: Math.round(85 + Math.random() * 15),
+                    reasoningTags: [
+                        `Emotional State: ${emotionalState}`,
+                        `Skill Level: ${skillLevel}%`,
+                        `Environment: ${environment}`,
+                        `Challenge Level: ${Math.round(difficulty * 100)}%`
+                    ]
+                }
+            };
+        }
+
+        function getWeatherForEmotion(emotion) {
+            const weatherMap = {
+                excited: 'clear',
+                frustrated: 'stormy',
+                focused: 'foggy',
+                bored: 'rainy',
+                challenged: 'sunny'
+            };
+            return weatherMap[emotion] || 'clear';
+        }
+
+        function generateEnemies(difficulty, environment) {
+            const enemyTypes = {
+                forest: ['Forest Spider', 'Wild Boar', 'Tree Guardian', 'Vine Snare'],
+                cave: ['Cave Bat', 'Stone Golem', 'Crystal Worm', 'Shadow Lurker'],
+                mountain: ['Snow Wolf', 'Ice Giant', 'Wind Spirit', 'Rock Slide'],
+                cosmic: ['Void Drone', 'Plasma Entity', 'Star Wraith', 'Quantum Ghost'],
+                urban: ['Security Bot', 'Cyber Hound', 'Drone Swarm', 'Digital Virus']
+            };
+            
+            const types = enemyTypes[environment] || enemyTypes.forest;
+            return types.slice(0, Math.floor(2 + difficulty * 3)).map(type => ({
+                type,
+                count: Math.floor(1 + difficulty * 3),
+                behavior: ['passive', 'aggressive', 'strategic', 'random'][Math.floor(Math.random() * 4)]
+            }));
+        }
+
+        function generateObstacles(difficulty) {
+            const obstacles = [
+                'Moving Platforms', 'Spike Traps', 'Laser Barriers', 'Teleporters',
+                'Gravity Wells', 'Time Loops', 'Mirror Mazes', 'Pressure Plates'
+            ];
+            
+            return obstacles.slice(0, Math.floor(2 + difficulty * 4)).map(type => ({
+                type,
+                intensity: Math.round(30 + difficulty * 70),
+                placement: ['scattered', 'clustered', 'path-blocking'][Math.floor(Math.random() * 3)]
+            }));
+        }
+
+        function generateRewards(difficulty) {
+            return [
+                { type: 'coin', value: Math.floor(50 + difficulty * 200), rarity: 'common' },
+                { type: 'powerup', value: Math.floor(1 + difficulty * 3), rarity: 'rare' },
+                { type: 'health', value: Math.floor(20 + difficulty * 50), rarity: 'common' },
+                { type: 'special', value: 1, rarity: difficulty > 0.7 ? 'legendary' : 'epic' }
+            ];
+        }
+
+        function getMusicForEnvironment(environment) {
+            const musicMap = {
+                forest: { genre: 'ambient', tempo: 'medium' },
+                cave: { genre: 'mysterious', tempo: 'slow' },
+                mountain: { genre: 'epic', tempo: 'medium' },
+                cosmic: { genre: 'ambient', tempo: 'variable' },
+                urban: { genre: 'intense', tempo: 'fast' }
+            };
+            
+            return musicMap[environment] || { genre: 'ambient', tempo: 'medium' };
+        }
+
+        function getSpecialFeatures(skillLevel) {
+            const features = [
+                'Dynamic Weather System',
+                'Adaptive Enemy AI',
+                'Hidden Secret Areas',
+                'Player Emotion Detection',
+                'Real-time Difficulty Scaling',
+                'Procedural Sound Design',
+                'Interactive Environment',
+                'AI Companion Assistant'
+            ];
+            
+            return features.slice(0, Math.floor(2 + skillLevel / 25));
+        }
+
+        function displayGeneratedLevel(level) {
+            const resultDiv = document.getElementById('levelResult');
+            
+            resultDiv.innerHTML = `
+                <div class="level-card">
+                    <div class="level-header">
+                        <div class="level-name">${level.name}</div>
+                        <div class="difficulty-badge">Difficulty: ${level.difficulty}%</div>
+                    </div>
+
+                    <div class="level-details">
+                        <div class="detail-section">
+                            <h4>🌍 Environment</h4>
+                            <ul>
+                                <li>Type: ${level.environment}</li>
+                                <li>Weather: ${level.weather}</li>
+                                <li>Time: day</li>
+                            </ul>
+                        </div>
+
+                        <div class="detail-section">
+                            <h4>👹 Enemies</h4>
+                            <ul>
+                                ${level.enemies.map(enemy => 
+                                    `<li>${enemy.count}x ${enemy.type} (${enemy.behavior})</li>`
+                                ).join('')}
+                            </ul>
+                        </div>
+
+                        <div class="detail-section">
+                            <h4>⚡ Obstacles</h4>
+                            <ul>
+                                ${level.obstacles.map(obstacle => 
+                                    `<li>${obstacle.type} - ${obstacle.intensity}% intensity</li>`
+                                ).join('')}
+                            </ul>
+                        </div>
+
+                        <div class="detail-section">
+                            <h4>🎵 Audio Experience</h4>
+                            <ul>
+                                <li>Genre: ${level.music.genre}</li>
+                                <li>Tempo: ${level.music.tempo}</li>
+                            </ul>
+                        </div>
+
+                        <div class="detail-section">
+                            <h4>✨ Special Features</h4>
+                            <ul>
+                                ${level.specialFeatures.map(feature => 
+                                    `<li>${feature}</li>`
+                                ).join('')}
+                            </ul>
+                        </div>
+
+                        <div class="detail-section">
+                            <h4>🏆 Rewards</h4>
+                            <ul>
+                                ${level.rewards.map(reward => 
+                                    `<li>${reward.value}x ${reward.type} (${reward.rarity})</li>`
+                                ).join('')}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="ai-insights">
+                        <h4>🤖 AI Personalization Insights</h4>
+                        <p><strong>Adapted for:</strong> ${level.aiPersonalization.adaptedFor}</p>
+                        <p><strong>AI Confidence:</strong> ${level.aiPersonalization.confidenceScore}%</p>
+                        <div style="margin-top: 1rem;">
+                            ${level.aiPersonalization.reasoningTags.map(tag => 
+                                `<span class="ai-tag">${tag}</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            resultDiv.style.display = 'block';
+        }
+
+        // Initialize
+        updateStats();
+        
+        // Demo message
+        console.log('🦁 Lionsun AI Demo loaded! Try the emotion detection and level generation features.');
+    </script>
+</body>
+</html>
