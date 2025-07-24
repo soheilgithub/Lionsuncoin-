@@ -20,6 +20,8 @@ import WalletPage from './pages/WalletPage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import ProfilePage from './pages/ProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
+import AirdropPage from './AirdropPage';
+import AirdropDemo from './AirdropDemo';
 
 // Redux
 import { initializeAuth } from './store/slices/authSlice';
@@ -88,6 +90,14 @@ function App() {
           <Route 
             path="/register" 
             element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />} 
+          />
+          <Route 
+            path="/airdrop" 
+            element={<AirdropPage />} 
+          />
+          <Route 
+            path="/airdrop-demo" 
+            element={<AirdropDemo />} 
           />
 
           {/* Protected Routes */}
