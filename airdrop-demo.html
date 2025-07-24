@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌞 Lionsun Airdrop - Claim Your Coins</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 25%, #2d2d5f 50%, #1a1a3a 75%, #0a0a1a 100%);
+            background-attachment: fixed;
+            color: #ffffff;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Navbar */
+        .navbar {
+            background: rgba(26, 26, 58, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
+            padding: 15px 0;
+            margin-bottom: 40px;
+        }
+        
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            font-size: 24px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            color: #FFD700;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #FFA500;
+        }
+        
+        /* Header Section */
+        .header {
+            text-align: center;
+            padding: 60px 0;
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        .header h1 {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+        
+        .header p {
+            color: #FFD700;
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+        
+        /* Cards */
+        .card {
+            background: rgba(26, 26, 58, 0.9);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 12px 48px rgba(255, 215, 0, 0.4);
+            transform: translateY(-4px);
+        }
+        
+        .card-content {
+            padding: 30px;
+        }
+        
+        /* Buttons */
+        .btn {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #1a1a3a;
+            font-weight: bold;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 32px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4);
+            transition: all 0.3s ease;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(45deg, #FFA500, #FFD700);
+            box-shadow: 0 6px 30px rgba(255, 215, 0, 0.6);
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Countdown Timer */
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin: 24px 0;
+            flex-wrap: wrap;
+        }
+        
+        .timer-unit {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px 12px;
+            min-width: 80px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .timer-number {
+            color: #FFD700;
+            font-weight: bold;
+            font-size: 2rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .timer-label {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+        
+        /* Section Titles */
+        .section-title {
+            color: #FFD700;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        /* Wallet Info */
+        .wallet-info {
+            margin-bottom: 20px;
+        }
+        
+        .wallet-info p {
+            color: #ccc;
+            margin-bottom: 5px;
+        }
+        
+        .wallet-address {
+            color: #FFD700;
+            font-family: monospace;
+            font-size: 1.1rem;
+        }
+        
+        .reward-amount {
+            color: #FFD700;
+            font-weight: bold;
+            font-size: 2rem;
+            margin: 10px 0;
+        }
+        
+        .eligible-chip {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        /* Referral System */
+        .referral-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            color: #FFD700;
+            font-family: monospace;
+            margin-bottom: 20px;
+        }
+        
+        .referral-input:focus {
+            outline: none;
+            border-color: rgba(255, 215, 0, 0.5);
+        }
+        
+        .copy-btn {
+            background: none;
+            border: none;
+            color: #FFD700;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 5px;
+        }
+        
+        /* Lore Section */
+        .lore-box {
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            font-style: italic;
+            text-align: center;
+        }
+        
+        .lore-text {
+            color: #ccc;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+        
+        /* Footer */
+        .footer {
+            background: rgba(26, 26, 58, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 2px solid rgba(255, 215, 0, 0.3);
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 60px;
+        }
+        
+        .footer p {
+            color: #FFD700;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header p {
+                font-size: 1.2rem;
+            }
+            
+            .countdown {
+                gap: 10px;
+            }
+            
+            .timer-unit {
+                min-width: 60px;
+                padding: 12px 8px;
+            }
+            
+            .timer-number {
+                font-size: 1.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="logo">🌞 Lionsun Coin</div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1>🌞 LIONSUN AIRDROP LIVE!</h1>
+            <p>Claim your Lionsun Coins. Help free the Roaring Lion.</p>
+            <button class="btn" onclick="connectWallet()" id="connectBtn">Connect Wallet</button>
+        </div>
+
+        <!-- Countdown Timer -->
+        <div class="card">
+            <div class="card-content">
+                <h2 class="section-title">🚀 Airdrop ends in:</h2>
+                <div class="countdown">
+                    <div class="timer-unit">
+                        <div class="timer-number" id="days">12</div>
+                        <div class="timer-label">Days</div>
+                    </div>
+                    <div class="timer-unit">
+                        <div class="timer-number" id="hours">08</div>
+                        <div class="timer-label">Hours</div>
+                    </div>
+                    <div class="timer-unit">
+                        <div class="timer-number" id="minutes">17</div>
+                        <div class="timer-label">Minutes</div>
+                    </div>
+                    <div class="timer-unit">
+                        <div class="timer-number" id="seconds">22</div>
+                        <div class="timer-label">Seconds</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Claim Zone -->
+        <div class="card">
+            <div class="card-content">
+                <h2 class="section-title">🎁 Claim Your Reward</h2>
+                
+                <div class="wallet-info">
+                    <p>👛 Your Wallet:</p>
+                    <div class="wallet-address" id="walletAddress">0x3e4...6bF</div>
+                </div>
+
+                <div class="wallet-info">
+                    <p>🎁 Reward:</p>
+                    <div class="reward-amount">150 $LIONSUN</div>
+                    <div class="eligible-chip">✅ Eligible - You've completed the quest!</div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn" onclick="claimAirdrop()" id="claimBtn" disabled>Claim Now</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Referral System -->
+        <div class="card">
+            <div class="card-content">
+                <h2 class="section-title">🔗 Referral System</h2>
+                
+                <div class="wallet-info">
+                    <p>Your Referral Link:</p>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <input type="text" class="referral-input" value="https://lionsun.quest/airdrop?ref=0x3e4...6bF" readonly>
+                        <button class="copy-btn" onclick="copyReferralLink()">📋</button>
+                    </div>
+                </div>
+
+                <div class="wallet-info">
+                    <p>🎉 You earned +50 $LIONSUN from 3 invites!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mini Lore Section -->
+        <div class="card">
+            <div class="card-content">
+                <h2 class="section-title">📖 The Legend of Lionsun</h2>
+                <div class="lore-box">
+                    <p class="lore-text">"Lionsun, the cosmic lion, is trapped in a psychological maze. The more people you invite, the stronger he becomes. Set him free—together."</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2024 Lionsun Coin. All rights reserved. 🌞</p>
+    </footer>
+
+    <script>
+        // Countdown Timer
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const endDate = new Date(now + (12 * 24 * 60 * 60 * 1000) + (8 * 60 * 60 * 1000) + (17 * 60 * 1000) + (22 * 1000)).getTime();
+            const distance = endDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+            }
+        }
+
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Wallet Connection
+        function connectWallet() {
+            const btn = document.getElementById('connectBtn');
+            const claimBtn = document.getElementById('claimBtn');
+            const walletAddress = document.getElementById('walletAddress');
+            
+            btn.textContent = 'Connecting...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.textContent = 'Wallet Connected';
+                btn.style.background = 'linear-gradient(45deg, #4CAF50, #45a049)';
+                claimBtn.disabled = false;
+                walletAddress.textContent = '0x3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f';
+            }, 1000);
+        }
+
+        // Claim Airdrop
+        function claimAirdrop() {
+            alert('🎉 Airdrop claimed successfully! 150 $LIONSUN has been sent to your wallet.');
+        }
+
+        // Copy Referral Link
+        function copyReferralLink() {
+            const input = document.querySelector('.referral-input');
+            input.select();
+            input.setSelectionRange(0, 99999);
+            document.execCommand('copy');
+            alert('Referral link copied to clipboard!');
+        }
+
+        // Add some interactive effects
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-4px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>
