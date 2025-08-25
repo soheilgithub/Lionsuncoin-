@@ -7,7 +7,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { Toaster } from 'react-hot-toast';
 
 import App from './App';
-import { store } from './store/store';
+import { store } from './store';
 import './index.css';
 
 // Create custom theme for Lionsuncoin
