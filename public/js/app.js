@@ -69,6 +69,9 @@ class LionsuncoinApp {
     // Hero action buttons
     const playNowBtn = document.getElementById('playNowBtn');
     const learnMoreBtn = document.getElementById('learnMoreBtn');
+    const viewAllGamesBtn = document.getElementById('viewAllGamesBtn');
+    const createGameBtn = document.getElementById('createGameBtn');
+    const viewAllConsolesBtn = document.getElementById('viewAllConsolesBtn');
 
     if (playNowBtn) {
       playNowBtn.addEventListener('click', () => {
@@ -86,6 +89,24 @@ class LionsuncoinApp {
       });
     }
 
+    if (viewAllGamesBtn) {
+      viewAllGamesBtn.addEventListener('click', () => {
+        this.scrollToSection('#games');
+      });
+    }
+
+    if (viewAllConsolesBtn) {
+      viewAllConsolesBtn.addEventListener('click', () => {
+        this.scrollToSection('#platforms');
+      });
+    }
+
+    if (createGameBtn) {
+      createGameBtn.addEventListener('click', () => {
+        this.openCreateGameDialog();
+      });
+    }
+
     // Window events
     window.addEventListener('scroll', () => this.handleScroll());
     window.addEventListener('resize', () => this.handleResize());
@@ -94,6 +115,12 @@ class LionsuncoinApp {
   setupNavigation() {
     // Set up navigation highlighting on scroll
     this.handleScroll();
+  }
+
+  openCreateGameDialog() {
+    // Reuse signup modal structure to keep simple for now
+    this.showToast('Creator tools coming soon! Join our dev program.', 'info');
+    this.openModal('signupModal');
   }
 
   setupModals() {
