@@ -128,6 +128,32 @@
         </div>
     </section>
 
+    <!-- Top Consoles Strip -->
+    <section class="top-strip" id="topStrip">
+        <div class="container">
+            <div class="top-strip-row">
+                <div class="top-strip-title">
+                    <i class="fas fa-trophy"></i>
+                    <span>Top Consoles</span>
+                </div>
+                <div class="top-strip-actions">
+                    <button class="btn btn-secondary" id="viewAllConsolesBtn">
+                        <span>Check out all</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="top-consoles">
+                <div class="console-chip"><i class="fab fa-playstation"></i><span>PS5</span></div>
+                <div class="console-chip"><i class="fab fa-apple"></i><span>iOS</span></div>
+                <div class="console-chip"><i class="fab fa-android"></i><span>Android</span></div>
+                <div class="console-chip"><i class="fab fa-windows"></i><span>Windows</span></div>
+                <div class="console-chip"><i class="fab fa-linux"></i><span>Linux</span></div>
+                <div class="console-chip"><i class="fab fa-chrome"></i><span>Web</span></div>
+            </div>
+        </div>
+    </section>
+
     <!-- Platforms Section -->
     <section id="platforms" class="platforms">
         <div class="container">
@@ -191,9 +217,21 @@
     <!-- Games Section -->
     <section id="games" class="games">
         <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Featured Games</h2>
-                <p class="section-description">Earn Lionsuncoin while having fun</p>
+            <div class="section-header section-header-row">
+                <div>
+                    <h2 class="section-title">Top Games</h2>
+                    <p class="section-description">Trending now across all platforms</p>
+                </div>
+                <div class="section-cta-group">
+                    <button class="btn btn-secondary" id="viewAllGamesBtn">
+                        <span>Check out all</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button class="btn btn-primary" id="createGameBtn">
+                        <i class="fas fa-plus"></i>
+                        <span>Create</span>
+                    </button>
+                </div>
             </div>
             <div class="games-grid" id="gamesGrid">
                 <!-- Games will be dynamically loaded -->
